@@ -1,6 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/blueDiscovery"
+    android:scrollbars="none"
+    tools:context=".ui.fragment.SignInFragment">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnLogin"
+            style="@style/primaryButton"
+            android:layout_width="295dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:text="Login"
+            android:textSize="13sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/inputs_constraint_layout" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/welcom_back_log_in_text_view"
+            android:layout_width="295dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-4dp"
+            android:gravity="start"
+            android:lineSpacingMultiplier="1.5"
+            android:text="Welcome to Friends Chat"
+            android:textColor="#19224C"
+            android:textSize="20sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnLogin"
+            app:layout_constraintBottom_toBottomOf="@+id/btnLogin"
+            tools:layout_editor_absoluteX="40dp"
+            tools:layout_editor_absoluteY="-5dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvSignedUser"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/match_constrain"
+            android:layout_marginTop="40dp"
+            android:background="@color/transparent"
+            android:elevation="@dimen/_08"
+            android:padding="@dimen/_08"
+            android:text="@string/have_account"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:transformPivotY="@dimen/_08"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/inputs_constraint_layout"
+            android:layout_width="295dp"
+            android:layout_height="@dimen/_200"
+            android:layout_marginTop="38dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/welcom_back_log_in_text_view"
+            tools:layout_editor_absoluteX="40dp"
+            tools:layout_editor_absoluteY="123dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_110"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/email_address_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-1dp"
+                    android:alpha="0.64"
+                    android:gravity="start"
+                    android:lineSpacingMultiplier="1.25"
+                    android:text="User Name"
+                    android:textColor="#454C66"
+                    android:textSize="13sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="-2dp" />
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edtUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_15"
+                    app:helperText=" "
+                    app:helperTextTextColor="@color/red"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/email_address_text_view">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:fontFamily="@font/avertacy_regular"
+                        android:hint="username"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_110"
+                android:layout_marginTop="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/password_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-1dp"
+                    android:alpha="0.64"
+                    android:gravity="start"
+                    android:lineSpacingMultiplier="1.25"
+                    android:text="Password"
+                    android:textColor="#454C66"
+                    android:textSize="@dimen/dimensFont16"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="-2dp" />
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edtPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_15"
+                    app:helperText=" "
+                    app:helperTextTextColor="@color/red"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/password_text_view"
+                    app:passwordToggleEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:fontFamily="@font/avertacy_regular"
+                        android:hint="password"
+                        android:inputType="textPassword" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

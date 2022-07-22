@@ -3,4 +3,23 @@
 
     <!--UI Screen-->
     <string name="splash_screen_fragment">SplashScreenFragment</string>
+
+    <!--Register/SignIn - Page-->
+    <string name="change_email">Change Email</string>
+    <string name="email_address">email address</string>
+    <string name="address">address</string>
+    <string name="phone_number">Phone number</string>
+    <string name="email">Email</string>
+    <string name="profile_fragment">Profile</string>
+    <string name="and_bio">and Bio</string>
+    <string name="register_for">Register for</string>
+    <string name="register">Register</string>
+    <string name="skip">Skip</string>
+    <string name="number">Number</string>
+    <string name="username">Username</string>
+    <string name="have_account">I have an account !</string>
+    <string name="sign_in_fragment">SignIn Page</string>
+    <string name="landing_fragment">Landing Page</string>
+    <string name="sign_up_fragment">Register Page</string>
+
 </resources>
