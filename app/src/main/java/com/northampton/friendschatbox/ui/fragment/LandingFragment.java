@@ -11,6 +11,8 @@ import androidx.annotation.Nullable;
 import com.northampton.friendschatbox.R;
 import com.northampton.friendschatbox.databinding.FragmentLandingPageBinding;
 import com.northampton.friendschatbox.ui.BaseFragment;
+import com.northampton.friendschatbox.ui.activity.LandingActivity;
+import com.northampton.friendschatbox.ui.activity.MainActivity;
 import com.northampton.friendschatbox.utils.AppPreferences;
 
 public class LandingFragment extends BaseFragment {
@@ -46,6 +48,7 @@ public class LandingFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mAppPreferences = AppPreferences.getInstance(getContext());
+        //((LandingActivity) getActivity()).setToolbarTitle("My Friends");
     }
 
 

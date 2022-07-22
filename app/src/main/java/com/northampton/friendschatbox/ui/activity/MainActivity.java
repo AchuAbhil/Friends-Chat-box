@@ -1,5 +1,6 @@
 package com.northampton.friendschatbox.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -35,10 +36,17 @@ public class MainActivity extends BaseActivity {
         navController = navHostFragment.getNavController();
         navGraph.setStartDestination(R.id.splashScreenFragment);
 
-/*        if (mAppPreferences.getToken().equals("")) {
-            navGraph.setStartDestination(R.id.splashScreenFragment);
+  /*      if (mAppPreferences.getToken() != null) {
+            if(mAppPreferences.getToken().equals("")) {
+                navGraph.setStartDestination(R.id.splashScreenFragment);
+            }
         } else {
-
+            navigateToLanding();
         }*/
+    }
+
+    public void navigateToLanding() {
+        startActivity(new Intent(this, LandingActivity.class));
+        finish();
     }
 }

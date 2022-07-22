@@ -21,5 +21,7 @@
     <string name="sign_in_fragment">SignIn Page</string>
     <string name="landing_fragment">Landing Page</string>
     <string name="sign_up_fragment">Register Page</string>
+    <string name="group_circles_fragment">Friends</string>
+    <string name="app_logout">LogOut</string>
 
 </resources>

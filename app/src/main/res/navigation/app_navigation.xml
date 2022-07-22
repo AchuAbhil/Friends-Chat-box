@@ -13,8 +13,7 @@
 
         <action
             android:id="@+id/action_splashScreenFragment_to_signInFragment"
-            app:destination="@id/signInFragment"
-            />
+            app:destination="@id/signInFragment" />
 
     </fragment>
 
@@ -26,13 +25,7 @@
 
         <action
             android:id="@+id/action_signInFragment_to_signUpFragment"
-            app:destination="@id/signUpFragment"
-            />
-
-        <action
-            android:id="@+id/action_signInFragment_to_LandingFragment"
-            app:destination="@id/landingFragment"
-            />
+            app:destination="@id/signUpFragment" />
 
     </fragment>
 
@@ -42,23 +35,6 @@
         android:label="@string/sign_up_fragment"
         tools:layout="@layout/fragment_sign_up">
 
-        <action
-            android:id="@+id/action_signUpFragment_to_LandingFragment"
-            app:destination="@id/landingFragment"
-            />
-
     </fragment>
-
-    <fragment
-        android:id="@+id/landingFragment"
-        android:name="com.northampton.friendschatbox.ui.fragment.LandingFragment"
-        android:label="@string/landing_fragment"
-        tools:layout="@layout/fragment_landing_page">
-
-    </fragment>
-
-
-
-
 
 </navigation>

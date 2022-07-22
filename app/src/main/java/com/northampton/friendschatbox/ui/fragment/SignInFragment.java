@@ -1,5 +1,6 @@
 package com.northampton.friendschatbox.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import androidx.navigation.Navigation;
 import com.northampton.friendschatbox.R;
 import com.northampton.friendschatbox.databinding.FragmentSignInBinding;
 import com.northampton.friendschatbox.ui.BaseFragment;
+import com.northampton.friendschatbox.ui.activity.LandingActivity;
+import com.northampton.friendschatbox.ui.activity.MainActivity;
 import com.northampton.friendschatbox.utils.AppPreferences;
 
 public class SignInFragment extends BaseFragment {
@@ -51,10 +54,9 @@ public class SignInFragment extends BaseFragment {
             Navigation.findNavController(view).navigate(R.id.action_signInFragment_to_signUpFragment);
         });
         binding.btnLogin.setOnClickListener(v -> {
-            Navigation.findNavController(view).navigate(R.id.action_signInFragment_to_LandingFragment);
+            ((MainActivity) getActivity()).navigateToLanding();
         });
     }
-
 
     @Override
     public void onDestroyView() {
