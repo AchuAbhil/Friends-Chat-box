@@ -15,6 +15,8 @@ import com.northampton.friendschatbox.ui.activity.LandingActivity;
 import com.northampton.friendschatbox.ui.activity.MainActivity;
 import com.northampton.friendschatbox.utils.AppPreferences;
 
+import java.util.Objects;
+
 public class LandingFragment extends BaseFragment {
 
     AppPreferences mAppPreferences;
@@ -48,7 +50,7 @@ public class LandingFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mAppPreferences = AppPreferences.getInstance(getContext());
-        //((LandingActivity) getActivity()).setToolbarTitle("My Friends");
+        ((LandingActivity) requireActivity()).setToolbarTitle("My Friends");
     }
 
 
