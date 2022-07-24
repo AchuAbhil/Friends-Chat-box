@@ -6,23 +6,27 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.Navigation;
 
 import com.northampton.friendschatbox.R;
+import com.northampton.friendschatbox.data.models.UserDetails;
 import com.northampton.friendschatbox.databinding.FragmentSignInBinding;
 import com.northampton.friendschatbox.ui.BaseFragment;
 import com.northampton.friendschatbox.ui.activity.MainActivity;
 import com.northampton.friendschatbox.utils.AppPreferences;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class SignInFragment extends BaseFragment {
 
     AppPreferences mAppPreferences;
     private FragmentSignInBinding binding;
+    private HashMap<Boolean, UserDetails> userDetailsHashMap;
 
     public SignInFragment() {
         // Required empty public constructor
@@ -58,11 +62,15 @@ public class SignInFragment extends BaseFragment {
             Navigation.findNavController(view).navigate(R.id.action_signInFragment_to_signUpFragment);
         });
         binding.btnLogin.setOnClickListener(v -> {
-            if (((MainActivity) requireActivity()).loginCheck(
+            userDetailsHashMap = ((MainActivity) requireActivity()).loginCheck(
                     Objects.requireNonNull(binding.edtUsername.getEditText()).getText().toString(),
                     Objects.requireNonNull(binding.edtPassword.getEditText()).getText().toString()
-            )) {
+            );
+            if (userDetailsHashMap.containsKey(true)) {
+                mAppPreferences.setUserInfo(userDetailsHashMap.get(true));
                 ((MainActivity) requireActivity()).navigateToLanding();
+            } else {
+                Toast.makeText(requireActivity(), "UserName: " + binding.edtUsername.getEditText().getText().toString() + ",Is not registered kindly register.", Toast.LENGTH_LONG).show();
             }
         });
     }

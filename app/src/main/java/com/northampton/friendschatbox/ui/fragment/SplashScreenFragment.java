@@ -1,5 +1,6 @@
 package com.northampton.friendschatbox.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import androidx.navigation.Navigation;
 import com.northampton.friendschatbox.R;
 import com.northampton.friendschatbox.databinding.FragmentSplashScreenBinding;
 import com.northampton.friendschatbox.ui.BaseFragment;
+import com.northampton.friendschatbox.ui.activity.LandingActivity;
 import com.northampton.friendschatbox.utils.AppPreferences;
 
 
@@ -56,16 +58,13 @@ public class SplashScreenFragment extends BaseFragment {
     private void checkIfUserLoggedIn(View view) {
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            Navigation.findNavController(view).navigate(R.id.action_splashScreenFragment_to_signInFragment);
+            if (getUserDetails() != null && getUserDetails().getFullName() != null) {
+                Navigation.findNavController(view).navigate(R.id.action_splashScreenFragment_to_signInFragment);
+            } else {
+                startActivity(new Intent(requireActivity(), LandingActivity.class));
+                requireActivity().finish();
+            }
         }, SPLASH_SCREEN_TIME_OUT);
-
-        //Navigation.findNavController(view).navigate(R.id.action_splashScreenFragment_to_signInFragment);
-
-/*        if (userDetails != null && userDetails.getFirstName() != null) {
-            Navigation.findNavController(view).navigate(R.id.action_splashScreenFragment_to_signInFragment);
-        } else {
-            Navigation.findNavController(view).navigate(R.id.action_splashScreenFragment_to_signInFragment);
-        }*/
     }
 
     @Override

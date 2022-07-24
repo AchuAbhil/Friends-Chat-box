@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.material.button.MaterialButton;
 import com.northampton.friendschatbox.R;
 import com.northampton.friendschatbox.data.models.UserDetails;
 import com.northampton.friendschatbox.databinding.FragmentSignUpBinding;
@@ -19,7 +18,6 @@ import com.northampton.friendschatbox.ui.BaseFragment;
 import com.northampton.friendschatbox.ui.activity.MainActivity;
 import com.northampton.friendschatbox.utils.AppPreferences;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -61,9 +59,8 @@ public class SignUpFragment extends BaseFragment {
         mAppPreferences = AppPreferences.getInstance(getContext());
         userDetails = new UserDetails();
         getTextChangeListener();
-        getGenderOnBtnClick();
         getRegisteredDateTime();
-        registerBtnClick();
+        registerBtnClick(view);
     }
 
     private void getRegisteredDateTime() {
@@ -77,7 +74,7 @@ public class SignUpFragment extends BaseFragment {
         userDetails.setDateUpdated(registeredTimeDate);
     }
 
-    private void registerBtnClick() {
+    private void registerBtnClick(View view) {
         binding.btnSignUp.setOnClickListener(v -> {
             getRegisterData();
         });
@@ -193,20 +190,13 @@ public class SignUpFragment extends BaseFragment {
                 binding.edtFullName.getEditText() != null &&
                 binding.edtHobbies.getEditText() != null
         ) {
-            if(((MainActivity) requireActivity()).registerUser(userDetails)){
+            if (((MainActivity) requireActivity()).registerUser(userDetails)) {
+                mAppPreferences.setUserInfo(userDetails);
                 ((MainActivity) requireActivity()).navigateToLanding();
-            }else {
-                Toast.makeText(requireActivity(),"Register failed please see the values inputted.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(requireActivity(), "Register failed please see the values inputted.", Toast.LENGTH_LONG).show();
             }
         }
-    }
-
-    private void getGenderOnBtnClick() {
-        userDetails.setSex("MALE");
-        binding.btnTG.setOnClickListener(v -> {
-            MaterialButton materialButton = v.findViewById(binding.btnTG.getCheckedButtonId());
-            userDetails.setSex(materialButton.getText().toString());
-        });
     }
 
     @Override

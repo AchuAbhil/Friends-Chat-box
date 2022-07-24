@@ -26,10 +26,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimens30"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:visibility="gone">
+                app:layout_constraintTop_toTopOf="parent">
 
 
                 <androidx.cardview.widget.CardView
@@ -177,11 +177,11 @@
                 android:layout_marginEnd="@dimen/dimens24"
                 android:focusable="true"
                 android:fontFamily="@font/avertacy_regular"
+                android:gravity="top"
                 android:hint="Hobbies"
                 android:imeOptions="actionNext"
                 android:maxLength="25"
                 android:singleLine="true"
-                android:gravity="top"
                 app:helperText=" "
                 app:helperTextTextColor="@color/red"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -193,50 +193,9 @@
                     android:layout_height="200dp"
                     android:background="@color/white"
                     android:gravity="top"
-                    android:textAlignment="gravity"/>
+                    android:textAlignment="gravity" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
-            <RelativeLayout
-                android:id="@+id/rlGender"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimens24"
-                android:layout_marginTop="@dimen/dimens32"
-                android:layout_marginEnd="@dimen/dimens24"
-                app:layout_constraintTop_toBottomOf="@+id/edtHobbies">
-
-                <com.google.android.material.button.MaterialButtonToggleGroup
-                    android:id="@+id/btnTG"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:checkedButton="@id/btnMale"
-                    app:singleSelection="true">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnMale"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:layout_weight="1"
-                        android:checked="true"
-                        android:text="Male"
-                        android:textSize="14dp" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnFemale"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:layout_weight="1"
-                        android:checked="false"
-                        android:text="Female"
-                        android:textSize="14dp" />
-                </com.google.android.material.button.MaterialButtonToggleGroup>
-            </RelativeLayout>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnSignUp"
@@ -256,7 +215,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.517"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rlGender" />
+                app:layout_constraintTop_toBottomOf="@+id/edtHobbies" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

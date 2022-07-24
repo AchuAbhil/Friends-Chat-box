@@ -16,6 +16,7 @@ import com.northampton.friendschatbox.data.models.UserDetails;
 import com.northampton.friendschatbox.databinding.ActivityMainBinding;
 import com.northampton.friendschatbox.ui.BaseActivity;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends BaseActivity {
@@ -42,29 +43,29 @@ public class MainActivity extends BaseActivity {
         navGraph.setStartDestination(R.id.splashScreenFragment);
     }
 
-    public Boolean loginCheck(String email, String password) {
+    public HashMap<Boolean, UserDetails> loginCheck(String email, String password) {
         DataBaseHelper dataBaseHelper = new DataBaseHelper(MainActivity.this);
 
         List<UserDetails> userDetailsList = dataBaseHelper.getAllUsers(this);
-        Boolean isLoginCheck = false;
+        boolean isLoginCheck = false;
+        HashMap<Boolean, UserDetails> userDetailsHashMap = new HashMap<>();
+        userDetailsHashMap.put(false, new UserDetails());
 
         if (userDetailsList != null) {
             if (userDetailsList.size() > 0) {
                 for (UserDetails userDetails : userDetailsList) {
-                    isLoginCheck = userDetails.emailAddress.equals(email) && userDetails.password.equals(password);
-                }
-                if (!isLoginCheck) {
-                    Toast.makeText(this, "UserName: " + email + ",Is not registered kindly register.", Toast.LENGTH_LONG).show();
+                    if (userDetails.emailAddress != null && userDetails.password != null) {
+                        isLoginCheck = userDetails.emailAddress.equals(email) && userDetails.password.equals(password);
+                        userDetailsHashMap.put(isLoginCheck, userDetails);
+                    }
                 }
             } else {
                 Toast.makeText(this, "UserName: " + email + ",Is not registered kindly register.", Toast.LENGTH_LONG).show();
-                return false;
             }
         } else {
             Toast.makeText(this, "Empty data base please add a user.", Toast.LENGTH_LONG).show();
-            return false;
         }
-        return isLoginCheck;
+        return userDetailsHashMap;
     }
 
     public Boolean registerUser(UserDetails userDetails) {
