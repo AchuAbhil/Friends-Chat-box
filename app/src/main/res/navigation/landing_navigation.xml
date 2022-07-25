@@ -9,10 +9,31 @@
         android:id="@+id/landingFragment"
         android:name="com.northampton.friendschatbox.ui.fragment.LandingFragment"
         android:label="@string/landing_fragment"
-        tools:layout="@layout/fragment_landing_page">
+        tools:layout="@layout/fragment_landing_page"/>
 
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.northampton.friendschatbox.ui.fragment.ProfileFragment"
+        android:label="@string/profile_fragment"
+        tools:layout="@layout/fragment_profile" />
 
-    </fragment>
+    <fragment
+        android:id="@+id/searchFriendsFragment"
+        android:name="com.northampton.friendschatbox.ui.fragment.SearchFriendsFragment"
+        android:label="@string/fragment_search_friends"
+        tools:layout="@layout/fragment_search_friends" />
+
+    <fragment
+        android:id="@+id/friendsRequestFragment"
+        android:name="com.northampton.friendschatbox.ui.fragment.FriendsRequestFragment"
+        android:label="@string/fragment_friends_request"
+        tools:layout="@layout/fragment_friends_request" />
+
+    <fragment
+        android:id="@+id/logOutFragment"
+        android:name="com.northampton.friendschatbox.ui.fragment.LogoutFragment"
+        android:label="@string/app_logout"
+        tools:layout="@layout/fragment_logout" />
 
 
 </navigation>

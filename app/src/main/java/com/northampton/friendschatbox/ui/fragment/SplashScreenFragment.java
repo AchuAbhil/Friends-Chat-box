@@ -38,8 +38,7 @@ public class SplashScreenFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentSplashScreenBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
-        return view;
+        return binding.getRoot();
     }
 
 
@@ -59,10 +58,10 @@ public class SplashScreenFragment extends BaseFragment {
         Handler handler = new Handler();
         handler.postDelayed(() -> {
             if (getUserDetails() != null && getUserDetails().getFullName() != null) {
-                Navigation.findNavController(view).navigate(R.id.action_splashScreenFragment_to_signInFragment);
-            } else {
                 startActivity(new Intent(requireActivity(), LandingActivity.class));
                 requireActivity().finish();
+            } else {
+                Navigation.findNavController(view).navigate(R.id.action_splashScreenFragment_to_signInFragment);
             }
         }, SPLASH_SCREEN_TIME_OUT);
     }

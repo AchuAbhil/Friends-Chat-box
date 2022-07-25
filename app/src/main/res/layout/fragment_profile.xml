@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blueDiscovery"
+    tools:context=".ui.fragment.SignUpFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clProPic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens30"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="@dimen/dimens136"
+                    android:layout_height="@dimen/dimens136"
+                    android:orientation="vertical"
+                    app:cardCornerRadius="@dimen/dimens10"
+                    app:cardElevation="0dp"
+                    app:cardPreventCornerOverlap="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imgProfileImage"
+                        profileImageUrl="@{editprofile.proPic}"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:scaleType="centerCrop"
+                        tools:src="@drawable/image1" />
+
+
+                </androidx.cardview.widget.CardView>
+
+
+                <RelativeLayout
+                    android:id="@+id/rlUploadImage"
+                    android:layout_width="@dimen/dimens30"
+                    android:layout_height="@dimen/dimens30"
+                    android:background="@drawable/white_cicular_background"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+
+                    <RelativeLayout
+                        android:layout_width="@dimen/dimens24"
+                        android:layout_height="24dp"
+                        android:layout_centerInParent="true"
+
+                        android:background="@drawable/yellow_circular_background">
+
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_width="@dimen/dimens14"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_camera_black" />
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edtFullName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens24"
+                android:layout_marginTop="@dimen/dimens38"
+                android:layout_marginEnd="@dimen/dimens24"
+                android:focusable="true"
+                android:fontFamily="@font/avertacy_regular"
+                android:hint="Full Name"
+                android:imeOptions="actionNext"
+                android:maxLength="25"
+                android:singleLine="true"
+                app:helperText=" "
+                app:helperTextTextColor="@color/red"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/clProPic">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edtEmailID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens24"
+                android:layout_marginTop="@dimen/dimens32"
+                android:layout_marginEnd="@dimen/dimens24"
+                android:clickable="true"
+                android:enabled="true"
+                android:focusable="false"
+                android:fontFamily="@font/avertacy_regular"
+                android:hint="@string/email"
+                android:inputType="none"
+                android:singleLine="true"
+                app:helperText=" "
+                app:helperTextTextColor="@color/red"
+                app:layout_constraintTop_toBottomOf="@+id/edtFullName">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edtPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens24"
+                android:layout_marginTop="@dimen/dimens38"
+                android:layout_marginEnd="@dimen/dimens24"
+                app:helperText=" "
+                app:helperTextTextColor="@color/red"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edtEmailID"
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:fontFamily="@font/avertacy_regular"
+                    android:hint="password"
+                    android:inputType="textPassword" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edtHobbies"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens24"
+                android:layout_marginTop="@dimen/dimens38"
+                android:layout_marginEnd="@dimen/dimens24"
+                android:focusable="true"
+                android:fontFamily="@font/avertacy_regular"
+                android:gravity="top"
+                android:hint="Hobbies"
+                android:imeOptions="actionNext"
+                android:maxLength="25"
+                android:singleLine="true"
+                app:helperText=" "
+                app:helperTextTextColor="@color/red"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edtPassword">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@color/white"
+                    android:gravity="top"
+                    android:textAlignment="gravity" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSignUp"
+                style="@style/primaryButton"
+                android:layout_width="@dimen/dimens150"
+                android:layout_height="@dimen/dimens60"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/signup_button_background"
+                android:paddingStart="@dimen/dimens45"
+                android:paddingTop="@dimen/dimens20"
+                android:paddingEnd="@dimen/dimens45"
+                android:paddingBottom="@dimen/dimens20"
+                android:text="@string/save"
+                android:textAppearance="@style/fontBold14"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.517"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edtHobbies" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <include
+        android:id="@+id/inProgressbar"
+        layout="@layout/progressbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/match_constrain"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
