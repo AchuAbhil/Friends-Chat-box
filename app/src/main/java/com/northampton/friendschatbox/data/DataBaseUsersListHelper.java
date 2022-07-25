@@ -14,7 +14,7 @@ import com.northampton.friendschatbox.data.models.UserDetails;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataBaseHelper extends SQLiteOpenHelper {
+public class DataBaseUsersListHelper extends SQLiteOpenHelper {
 
     public static final String ALL_USERS_TABLE = "ALL_USERS_TABLE";
     public static final String COLUMN_FULL_NAME = "COLUMN_FULL_NAME";
@@ -26,7 +26,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_SEX = "COLUMN_SEX";
     public static final String COLUMN_FRIENDS_TABLE = "COLUMN_FRIENDS_TABLE";
 
-    public DataBaseHelper(@Nullable Context context) {
+    public DataBaseUsersListHelper(@Nullable Context context) {
         super(context, "user.db", null, 1);
     }
 

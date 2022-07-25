@@ -12,7 +12,6 @@ import com.northampton.friendschatbox.utils.AppPreferences;
 
 public abstract class BaseActivity extends AppCompatActivity {
     public FrameLayout mProgressBar;
-    protected AppPreferences mAppPreferences;
 
     @Override
     public void setContentView(int layoutResID) {
@@ -20,7 +19,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         ConstraintLayout constraintLayout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.activity_base, null);
         FrameLayout frameLayout = constraintLayout.findViewById(R.id.activity_content);
         mProgressBar = constraintLayout.findViewById(R.id.progress_bar);
-        mAppPreferences = AppPreferences.getInstance(this);
 
         getLayoutInflater().inflate(layoutResID, frameLayout, true);
         super.setContentView(constraintLayout);

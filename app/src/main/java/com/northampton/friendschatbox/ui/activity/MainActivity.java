@@ -11,7 +11,7 @@ import androidx.navigation.NavInflater;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.northampton.friendschatbox.R;
-import com.northampton.friendschatbox.data.DataBaseHelper;
+import com.northampton.friendschatbox.data.DataBaseUsersListHelper;
 import com.northampton.friendschatbox.data.models.UserDetails;
 import com.northampton.friendschatbox.databinding.ActivityMainBinding;
 import com.northampton.friendschatbox.ui.BaseActivity;
@@ -44,9 +44,9 @@ public class MainActivity extends BaseActivity {
     }
 
     public HashMap<Boolean, UserDetails> loginCheck(String email, String password) {
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(MainActivity.this);
+        DataBaseUsersListHelper dataBaseUsersListHelper = new DataBaseUsersListHelper(MainActivity.this);
 
-        List<UserDetails> userDetailsList = dataBaseHelper.getAllUsers(this);
+        List<UserDetails> userDetailsList = dataBaseUsersListHelper.getAllUsers(this);
         boolean isLoginCheck = false;
         HashMap<Boolean, UserDetails> userDetailsHashMap = new HashMap<>();
         userDetailsHashMap.put(false, new UserDetails());
@@ -69,8 +69,8 @@ public class MainActivity extends BaseActivity {
     }
 
     public Boolean registerUser(UserDetails userDetails) {
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(MainActivity.this);
-        return dataBaseHelper.addUser(userDetails);
+        DataBaseUsersListHelper dataBaseUsersListHelper = new DataBaseUsersListHelper(MainActivity.this);
+        return dataBaseUsersListHelper.addUser(userDetails);
     }
 
     public void navigateToLanding() {

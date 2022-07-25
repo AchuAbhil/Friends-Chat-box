@@ -44,8 +44,7 @@ public class SignUpFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentSignUpBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
-        return view;
+        return binding.getRoot();
     }
 
     @Override
@@ -99,7 +98,7 @@ public class SignUpFragment extends BaseFragment {
                 if (s != null) {
                     binding.edtFullName.setHelperText(getString(R.string.empty_string));
                     userDetails.setFullName(s.toString());
-                    userDetails.setFriendsTable(s + "_TABLE");
+                    userDetails.setFriendsTable(s + ".db");
                 }
             }
 

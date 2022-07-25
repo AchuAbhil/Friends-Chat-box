@@ -18,12 +18,18 @@
     <string name="number">Number</string>
     <string name="username">Username</string>
     <string name="have_account">I have an account !</string>
+    <string name="field_empty_error">Field cannot be empty</string>
+    <string name="empty_string"> </string>
+    <string name="save">Save</string>
+
+    <!--Nav Fragment Names / Drawer Menu-->
     <string name="sign_in_fragment">SignIn Page</string>
     <string name="landing_fragment">Landing Page</string>
     <string name="sign_up_fragment">Register Page</string>
-    <string name="group_circles_fragment">Friends</string>
+    <string name="fragment_friends_request">Friends Request Page</string>
+    <string name="fragment_search_friends">Search Friends Page</string>
+    <string name="group_circles_fragment">Search Friends</string>
+    <string name="friends_request_fragment">Friends Request</string>
     <string name="app_logout">LogOut</string>
-    <string name="field_empty_error">Field cannot be empty</string>
-    <string name="empty_string"> </string>
 
 </resources>

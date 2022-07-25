@@ -16,6 +16,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.northampton.friendschatbox.R;
+import com.northampton.friendschatbox.data.models.UserDetails;
 import com.northampton.friendschatbox.databinding.ActivityLandingBinding;
 import com.northampton.friendschatbox.ui.BaseActivity;
 import com.northampton.friendschatbox.utils.AppPreferences;
@@ -31,6 +32,8 @@ public class LandingActivity extends BaseActivity {
     private TextView navUsername;
     private TextView navEmail;
     private CircleImageView navProfile;
+    private AppPreferences mAppPreferences;
+    private UserDetails userDetails;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,7 +56,6 @@ public class LandingActivity extends BaseActivity {
         navUsername = headerView.findViewById(R.id.navUsername);
         navEmail = headerView.findViewById(R.id.navEmail);
         navProfile = headerView.findViewById(R.id.navProfile);
-        mAppPreferences = AppPreferences.getInstance(this);
         updateNavHeader();
     }
 
@@ -75,14 +77,8 @@ public class LandingActivity extends BaseActivity {
 
     public void updateNavHeader() {
         mAppPreferences = AppPreferences.getInstance(this);
-/*        userDetails = mAppPreferences.getUserCashedInfo();
-        navUsername.setText(userDetails.getUsername());
-        navEmail.setText(userDetails.getEmail());*/
-//        Log.i("GlideImage", userDetails.getProfilePic());
-/*        Glide.with(this)
-                .asDrawable()
-                .error(R.drawable.image1)
-                .into(navProfile);*/
-
+        userDetails = mAppPreferences.getUserInfo();
+        navUsername.setText(userDetails.getFullName());
+        navEmail.setText(userDetails.getEmailAddress());
     }
 }
