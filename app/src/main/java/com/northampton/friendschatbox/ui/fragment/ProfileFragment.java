@@ -86,6 +86,7 @@ public class ProfileFragment extends BaseFragment {
                 binding.edtHobbies.getEditText() != null
         ) {
             if(((LandingActivity) requireActivity()).updateDBUserDetails(currentEmailAddress, userDetails)){
+                currentEmailAddress = userDetails.getEmailAddress();
                 Toast.makeText(requireActivity(), "Update Successful.", Toast.LENGTH_LONG).show();
                 Objects.requireNonNull(binding.edtLastUpdated.getEditText()).setText(userDetails.getDateUpdated());
                 getAppPreferences().setUserInfo(userDetails);
