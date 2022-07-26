@@ -16,17 +16,11 @@ import com.northampton.friendschatbox.data.models.UserDetails;
 import com.northampton.friendschatbox.databinding.FragmentSignUpBinding;
 import com.northampton.friendschatbox.ui.BaseFragment;
 import com.northampton.friendschatbox.ui.activity.MainActivity;
-import com.northampton.friendschatbox.utils.AppPreferences;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Objects;
 
 public class SignUpFragment extends BaseFragment {
 
-    AppPreferences mAppPreferences;
     private FragmentSignUpBinding binding;
     private UserDetails userDetails;
 
@@ -55,25 +49,15 @@ public class SignUpFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mAppPreferences = AppPreferences.getInstance(getContext());
         userDetails = new UserDetails();
         getTextChangeListener();
-        getRegisteredDateTime();
-        registerBtnClick(view);
+        getDateTime();
+        userDetails.setDateRegistered(getDateTime());
+        userDetails.setDateUpdated(getDateTime());
+        registerBtnClick();
     }
 
-    private void getRegisteredDateTime() {
-        Date c = Calendar.getInstance().getTime();
-        System.out.println("Current time => " + c);
-
-        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
-        String formattedDate = df.format(c);
-        String registeredTimeDate = formattedDate + ", " + c;
-        userDetails.setDateRegistered(registeredTimeDate);
-        userDetails.setDateUpdated(registeredTimeDate);
-    }
-
-    private void registerBtnClick(View view) {
+    private void registerBtnClick() {
         binding.btnSignUp.setOnClickListener(v -> {
             getRegisterData();
         });
@@ -190,7 +174,7 @@ public class SignUpFragment extends BaseFragment {
                 binding.edtHobbies.getEditText() != null
         ) {
             if (((MainActivity) requireActivity()).registerUser(userDetails)) {
-                mAppPreferences.setUserInfo(userDetails);
+                getAppPreferences().setUserInfo(userDetails);
                 ((MainActivity) requireActivity()).navigateToLanding();
             } else {
                 Toast.makeText(requireActivity(), "Register failed please see the values inputted.", Toast.LENGTH_LONG).show();

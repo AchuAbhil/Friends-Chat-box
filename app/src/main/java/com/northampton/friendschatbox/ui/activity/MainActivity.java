@@ -24,6 +24,7 @@ public class MainActivity extends BaseActivity {
     private ActivityMainBinding binding;
     private NavGraph navGraph;
     private NavController navController;
+    private DataBaseUsersListHelper dataBaseUsersListHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,7 @@ public class MainActivity extends BaseActivity {
         View view = binding.getRoot();
         setContentView(view);
         setUpNavHost();
+        dataBaseUsersListHelper = new DataBaseUsersListHelper(MainActivity.this);
     }
 
     private void setUpNavHost() {
@@ -44,7 +46,6 @@ public class MainActivity extends BaseActivity {
     }
 
     public HashMap<Boolean, UserDetails> loginCheck(String email, String password) {
-        DataBaseUsersListHelper dataBaseUsersListHelper = new DataBaseUsersListHelper(MainActivity.this);
 
         List<UserDetails> userDetailsList = dataBaseUsersListHelper.getAllUsers(this);
         boolean isLoginCheck = false;
@@ -69,7 +70,6 @@ public class MainActivity extends BaseActivity {
     }
 
     public Boolean registerUser(UserDetails userDetails) {
-        DataBaseUsersListHelper dataBaseUsersListHelper = new DataBaseUsersListHelper(MainActivity.this);
         return dataBaseUsersListHelper.addUser(userDetails);
     }
 

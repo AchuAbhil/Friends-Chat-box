@@ -21,7 +21,6 @@ import com.northampton.friendschatbox.utils.AppPreferences;
 public class SplashScreenFragment extends BaseFragment {
 
     public static final Long SPLASH_SCREEN_TIME_OUT = 1000L;
-    AppPreferences mAppPreferences;
     private FragmentSplashScreenBinding binding;
 
     public SplashScreenFragment() {
@@ -50,7 +49,6 @@ public class SplashScreenFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mAppPreferences = AppPreferences.getInstance(getContext());
         checkIfUserLoggedIn(view);
     }
 

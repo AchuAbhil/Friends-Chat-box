@@ -16,6 +16,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.northampton.friendschatbox.R;
+import com.northampton.friendschatbox.data.DataBaseUsersListHelper;
 import com.northampton.friendschatbox.data.models.UserDetails;
 import com.northampton.friendschatbox.databinding.ActivityLandingBinding;
 import com.northampton.friendschatbox.ui.BaseActivity;
@@ -34,6 +35,7 @@ public class LandingActivity extends BaseActivity {
     private CircleImageView navProfile;
     private AppPreferences mAppPreferences;
     private UserDetails userDetails;
+    private DataBaseUsersListHelper dataBaseUsersListHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,7 +48,9 @@ public class LandingActivity extends BaseActivity {
 
     private void setUpNavHost() {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_landing);
+        assert navHostFragment != null;
         NavInflater navInflater = navHostFragment.getNavController().getNavInflater();
+        dataBaseUsersListHelper = new DataBaseUsersListHelper(LandingActivity.this);
         navGraph = navInflater.inflate(R.navigation.landing_navigation);
         navController = navHostFragment.getNavController();
         navGraph.setStartDestination(R.id.landingFragment);
@@ -80,5 +84,9 @@ public class LandingActivity extends BaseActivity {
         userDetails = mAppPreferences.getUserInfo();
         navUsername.setText(userDetails.getFullName());
         navEmail.setText(userDetails.getEmailAddress());
+    }
+
+    public Boolean updateDBUserDetails(String originalName, UserDetails userDetails) {
+        return dataBaseUsersListHelper.updateCourse(originalName,userDetails);
     }
 }

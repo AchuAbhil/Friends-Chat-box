@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blueDiscovery"
-    tools:context=".ui.fragment.SignUpFragment">
+    tools:context=".ui.fragment.ProfileFragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -197,6 +197,65 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edtRegisterDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens24"
+                android:layout_marginTop="@dimen/dimens38"
+                android:layout_marginEnd="@dimen/dimens24"
+                android:focusable="true"
+                android:fontFamily="@font/avertacy_regular"
+                android:hint="Registered Date"
+                android:imeOptions="actionNext"
+                android:maxLength="25"
+                android:singleLine="true"
+                android:enabled="false"
+                app:helperText=" "
+                app:helperTextTextColor="@color/red"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edtHobbies">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:textSize="@dimen/_12"
+                    android:background="@color/quantum_black_divider" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edtLastUpdated"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens24"
+                android:layout_marginTop="@dimen/dimens38"
+                android:layout_marginEnd="@dimen/dimens24"
+                android:focusable="true"
+                android:fontFamily="@font/avertacy_regular"
+                android:hint="Last UpDated"
+                android:imeOptions="actionNext"
+                android:maxLength="25"
+                android:singleLine="true"
+                android:enabled="false"
+                app:helperText=" "
+                app:helperTextTextColor="@color/red"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edtRegisterDate">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:textSize="@dimen/_12"
+                    android:background="@color/quantum_black_divider" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnSignUp"
                 style="@style/primaryButton"
@@ -213,9 +272,8 @@
                 android:textAppearance="@style/fontBold14"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.517"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edtHobbies" />
+                app:layout_constraintTop_toBottomOf="@+id/edtLastUpdated" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

@@ -13,6 +13,11 @@ import androidx.fragment.app.Fragment;
 import com.northampton.friendschatbox.data.models.UserDetails;
 import com.northampton.friendschatbox.utils.AppPreferences;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 
 public abstract class BaseFragment extends Fragment {
 
@@ -52,8 +57,18 @@ public abstract class BaseFragment extends Fragment {
         return userDetails;
     }
 
+    public String getDateTime() {
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.getDefault());
+        return df.format(c);
+    }
+
     public AppCompatActivity getBaseActivity() {
         return activity;
+    }
+
+    public AppPreferences getAppPreferences() {
+        return mAppPreferences;
     }
 
     @Override

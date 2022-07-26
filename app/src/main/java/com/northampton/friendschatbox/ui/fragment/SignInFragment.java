@@ -24,7 +24,6 @@ import java.util.Objects;
 
 public class SignInFragment extends BaseFragment {
 
-    AppPreferences mAppPreferences;
     private FragmentSignInBinding binding;
     private HashMap<Boolean, UserDetails> userDetailsHashMap;
 
@@ -54,7 +53,6 @@ public class SignInFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mAppPreferences = AppPreferences.getInstance(getContext());
         validatePassword();
         validateUserName();
         binding.tvSignedUser.setOnClickListener(v -> {
@@ -66,7 +64,7 @@ public class SignInFragment extends BaseFragment {
                     Objects.requireNonNull(binding.edtPassword.getEditText()).getText().toString()
             );
             if (userDetailsHashMap.containsKey(true)) {
-                mAppPreferences.setUserInfo(userDetailsHashMap.get(true));
+                getAppPreferences().setUserInfo(userDetailsHashMap.get(true));
                 ((MainActivity) requireActivity()).navigateToLanding();
             } else {
                 Toast.makeText(requireActivity(), "UserName: " + binding.edtUsername.getEditText().getText().toString() + ",Is not registered kindly register.", Toast.LENGTH_LONG).show();

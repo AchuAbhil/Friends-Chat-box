@@ -112,7 +112,34 @@ public class DataBaseUsersListHelper extends SQLiteOpenHelper {
         return returnList;
     }
 
+    // below is the method for updating our user based on the name
+    public boolean updateCourse(String originalName, UserDetails userDetails) {
+
+        // calling a method to get writable database.
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        // on below line we are passing all contentValues
+        // along with its key and value pair.
+        contentValues.put(COLUMN_FULL_NAME, userDetails.fullName);
+        contentValues.put(COLUMN_EMAIL_ADDRESS, userDetails.emailAddress);
+        contentValues.put(COLUMN_DATE_UPDATED, userDetails.dateUpdated);
+        contentValues.put(COLUMN_PASSWORD, userDetails.password);
+        contentValues.put(COLUMN_HOBBIES, userDetails.hobbies);
+        contentValues.put(COLUMN_SEX, userDetails.sex);
+        contentValues.put(COLUMN_FRIENDS_TABLE, userDetails.friendsTable);
+
+        // on below line we are calling a update method to update our database and passing our values.
+        // and we are comparing it with name of our course which is stored in original name variable.
+        long insert = db.update(ALL_USERS_TABLE, contentValues, "COLUMN_EMAIL_ADDRESS=?", new String[]{originalName});
+        db.close();
+        return insert!= -1;
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+        // this method is called to check if the table exists already.
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ALL_USERS_TABLE);
+        onCreate(sqLiteDatabase);
     }
 }

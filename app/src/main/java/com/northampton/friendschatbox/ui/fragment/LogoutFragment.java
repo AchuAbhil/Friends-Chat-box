@@ -23,7 +23,6 @@ import com.northampton.friendschatbox.utils.AppPreferences;
  */
 public class LogoutFragment extends BaseFragment {
 
-    AppPreferences mAppPreferences;
     private FragmentLogoutBinding binding;
 
     public LogoutFragment() {
@@ -47,7 +46,7 @@ public class LogoutFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAppPreferences.clear();
+        getAppPreferences().clear();
         startActivity(new Intent(getBaseActivity(), MainActivity.class));
         getBaseActivity().finish();
     }

@@ -19,7 +19,6 @@ import java.util.Objects;
 
 public class LandingFragment extends BaseFragment {
 
-    AppPreferences mAppPreferences;
     private FragmentLandingPageBinding binding;
 
     public LandingFragment() {
@@ -48,7 +47,6 @@ public class LandingFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mAppPreferences = AppPreferences.getInstance(getContext());
         ((LandingActivity) requireActivity()).setToolbarTitle("My Friends");
     }
 

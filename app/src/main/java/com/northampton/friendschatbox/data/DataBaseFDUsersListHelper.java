@@ -77,6 +77,16 @@ public class DataBaseFDUsersListHelper extends SQLiteOpenHelper {
         return returnList;
     }
 
+    public Boolean deleteOne(FriendData friendData) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        String queryString = "DELETE * FROM " + FD_LIST_TABLE + " WHERE " + COLUMN_FULL_NAME + " = " + friendData.fullName;
+
+        Cursor cursor = sqLiteDatabase.rawQuery(queryString, null);
+
+        return cursor.moveToFirst();
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
     }
