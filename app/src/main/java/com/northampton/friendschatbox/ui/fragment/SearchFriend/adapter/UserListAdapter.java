@@ -1,4 +1,4 @@
-package com.northampton.friendschatbox.ui.fragment.FriendRequest.adapter;
+package com.northampton.friendschatbox.ui.fragment.SearchFriend.adapter;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -6,18 +6,17 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.northampton.friendschatbox.data.models.FriendRequestData;
+import com.northampton.friendschatbox.data.models.UserDetails;
 import com.northampton.friendschatbox.databinding.ViewListUserViewBinding;
-import com.northampton.friendschatbox.ui.fragment.SearchFriend.adapter.AdapterInterface;
 
 import java.util.List;
 
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.holder> {
 
-    List<FriendRequestData> items;
-    public FDRequestAdapterInterface buttonListener;
+    List<UserDetails> items;
+    public AdapterInterface buttonListener;
 
-    public UserListAdapter(List<FriendRequestData> items, FDRequestAdapterInterface buttonListener) {
+    public UserListAdapter(List<UserDetails> items, AdapterInterface buttonListener) {
         this.items = items;
         this.buttonListener = buttonListener;
     }
@@ -31,8 +30,9 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.holder
 
     @Override
     public void onBindViewHolder(@NonNull holder holder,final int position) {
-        final FriendRequestData contact = items.get(position);
+        final UserDetails contact = items.get(position);
         holder.itemBinding.tvTitle.setText(contact.getFullName());
+
 
         holder.itemBinding.imgChecked.setOnClickListener(v -> {
             holder.itemBinding.imgChecked.setEnabled(false);

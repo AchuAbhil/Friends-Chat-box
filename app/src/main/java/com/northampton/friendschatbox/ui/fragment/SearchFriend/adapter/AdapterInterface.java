@@ -1,4 +1,4 @@
-package com.northampton.friendschatbox.ui.helper;
+package com.northampton.friendschatbox.ui.fragment.SearchFriend.adapter;
 
 import com.northampton.friendschatbox.data.models.UserDetails;
 

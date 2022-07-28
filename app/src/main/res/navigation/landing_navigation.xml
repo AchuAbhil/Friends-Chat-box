@@ -19,21 +19,20 @@
 
     <fragment
         android:id="@+id/searchFriendsFragment"
-        android:name="com.northampton.friendschatbox.ui.fragment.SearchFriendsFragment"
-        android:label="@string/fragment_search_friends"
-        tools:layout="@layout/fragment_search_friends" />
-
-    <fragment
-        android:id="@+id/friendsRequestFragment"
         android:name="com.northampton.friendschatbox.ui.fragment.FriendRequest.FriendsRequestFragment"
         android:label="@string/fragment_friends_request"
         tools:layout="@layout/fragment_friends_request" />
+
+    <fragment
+        android:id="@+id/friendsRequestFragment"
+        android:name="com.northampton.friendschatbox.ui.fragment.SearchFriend.SearchFriendFragment"
+        android:label="@string/fragment_search_friends"
+        tools:layout="@layout/fragment_search_friend" />
 
     <fragment
         android:id="@+id/logOutFragment"
         android:name="com.northampton.friendschatbox.ui.fragment.LogoutFragment"
         android:label="@string/app_logout"
         tools:layout="@layout/fragment_logout" />
-
 
 </navigation>

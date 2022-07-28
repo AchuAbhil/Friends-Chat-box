@@ -1,18 +1,13 @@
 package com.northampton.friendschatbox.ui.fragment.FriendRequest;
 
 
-import static com.northampton.friendschatbox.ui.fragment.SplashScreenFragment.SPLASH_SCREEN_TIME_OUT;
-
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,9 +17,8 @@ import com.northampton.friendschatbox.data.models.FriendRequestData;
 import com.northampton.friendschatbox.data.models.UserDetails;
 import com.northampton.friendschatbox.databinding.FragmentFriendsRequestBinding;
 import com.northampton.friendschatbox.ui.BaseFragment;
-import com.northampton.friendschatbox.ui.activity.LandingActivity;
+import com.northampton.friendschatbox.ui.fragment.FriendRequest.adapter.FDRequestAdapterInterface;
 import com.northampton.friendschatbox.ui.fragment.FriendRequest.adapter.UserListAdapter;
-import com.northampton.friendschatbox.ui.helper.AdapterInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +27,12 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendsRequestFragment extends BaseFragment implements AdapterInterface {
+public class FriendsRequestFragment extends BaseFragment implements FDRequestAdapterInterface {
 
-    String SearchData = "";
-    Integer friendId = 0;
-    List<UserDetails> userList = new ArrayList<>();
-    List<FriendRequestData> friendRequestList = new ArrayList<>();
     UserDetails userDetails = new UserDetails();
-    private AdapterInterface adapterInterface;
+    List<FriendRequestData> friendRequestList = new ArrayList<>();
     private FragmentFriendsRequestBinding binding;
+    private FDRequestAdapterInterface adapterInterface;
 
     public FriendsRequestFragment() {
         // Required empty public constructor
@@ -57,44 +48,26 @@ public class FriendsRequestFragment extends BaseFragment implements AdapterInter
 
     @Override
     protected int layoutRes() {
-        return R.layout.fragment_friends_request;
+        return R.layout.fragment_search_friend;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         adapterInterface = this;
-        findFriend(SearchData);
-        searchFriendsName();
-    }
-
-    private void searchFriendsName() {
-        binding.rlSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                SearchData = query;
-                findFriend(SearchData);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                //    adapter.getFilter().filter(newText);
-                return false;
-            }
-        });
+        findFriendRequest();
     }
 
     public void recycle() {
         binding.rvUser.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
-        binding.rvUser.setAdapter(new UserListAdapter(userList, adapterInterface));
+        binding.rvUser.setAdapter(new UserListAdapter(friendRequestList, adapterInterface));
     }
 
-    private void findFriend(String userName) {
+    private void findFriendRequest() {
         userDetails = getAppPreferences().getUserInfo();
-        userList.clear();
-        userList.addAll(((LandingActivity) requireActivity()).getUsersList());
-        if (userList != null && !userList.isEmpty()) {
+        friendRequestList.clear();
+        friendRequestList.addAll(getAppPreferences().getAllFriendRequest());
+        if (friendRequestList != null && !friendRequestList.isEmpty()) {
             binding.rvUser.setVisibility(View.VISIBLE);
             binding.tvNoDBMessage.setVisibility(View.GONE);
         } else {
@@ -105,23 +78,8 @@ public class FriendsRequestFragment extends BaseFragment implements AdapterInter
     }
 
     @Override
-    public void onItemClicked(UserDetails userDetails, String email) {
-        friendRequestList.clear();
-        if (getAppPreferences().getAllFriendRequest() != null) {
-            friendRequestList = getAppPreferences().getAllFriendRequest();
-        }
-        Handler handler = new Handler();
-        binding.rvUser.setEnabled(false);
-        showProgressBar(true);
-        FriendRequestData friendRequest = new FriendRequestData();
-        handler.postDelayed(() -> {
-            friendRequest.setFullName(userDetails.getFullName());
-            friendRequest.setEmailAddress(userDetails.getEmailAddress());
-            friendRequest.setRequestedAccepted(false);
-            ((LandingActivity) requireActivity()).friendsRequestDBUpdateCheck(userDetails.getEmailAddress(), friendRequest, userDetails.emailAddress);
-            showProgressBar(false);
-            binding.rvUser.setEnabled(true);
-        }, SPLASH_SCREEN_TIME_OUT);
+    public void onItemClicked(FriendRequestData userDetails, String email) {
+
     }
 
     @Override
