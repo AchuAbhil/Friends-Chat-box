@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.northampton.friendschatbox.data.models.UserDetails;
+import com.northampton.friendschatbox.ui.activity.LandingActivity;
+import com.northampton.friendschatbox.ui.activity.MainActivity;
 import com.northampton.friendschatbox.utils.AppPreferences;
 
 import java.text.SimpleDateFormat;
@@ -69,6 +71,14 @@ public abstract class BaseFragment extends Fragment {
 
     public AppPreferences getAppPreferences() {
         return mAppPreferences;
+    }
+
+    public void showProgressBar(boolean visibility) {
+        if (activity instanceof MainActivity) {
+            ((MainActivity) getBaseActivity()).showProgressBar(visibility);
+        } else if (activity instanceof LandingActivity) {
+            ((LandingActivity) getBaseActivity()).showProgressBar(visibility);
+        }
     }
 
     @Override

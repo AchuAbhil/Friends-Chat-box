@@ -116,7 +116,6 @@ public class ProfileFragment extends BaseFragment {
                 if (s != null) {
                     binding.edtFullName.setHelperText(getString(R.string.empty_string));
                     userDetails.setFullName(s.toString());
-                    userDetails.setFriendsTable(s + ".db");
                 }
             }
 

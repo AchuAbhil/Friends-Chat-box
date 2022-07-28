@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.northampton.friendschatbox.data.models.FriendRequestData;
 import com.northampton.friendschatbox.data.models.UserDetails;
 
 import java.util.ArrayList;
@@ -24,7 +25,8 @@ public class DataBaseUsersListHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PASSWORD = "COLUMN_PASSWORD";
     public static final String COLUMN_HOBBIES = "COLUMN_HOBBIES";
     public static final String COLUMN_SEX = "COLUMN_SEX";
-    public static final String COLUMN_FRIENDS_TABLE = "COLUMN_FRIENDS_TABLE";
+    public static final String COLUMN_FRIENDS_LIST = "COLUMN_FRIENDS_LIST";
+    public static final String COLUMN_FRIENDS_REQUEST_LIST = "COLUMN_FRIENDS_REQUEST_LIST";
 
     public DataBaseUsersListHelper(@Nullable Context context) {
         super(context, "user.db", null, 1);
@@ -41,7 +43,8 @@ public class DataBaseUsersListHelper extends SQLiteOpenHelper {
                 COLUMN_PASSWORD + " TEXT, " +
                 COLUMN_HOBBIES + " TEXT, " +
                 COLUMN_SEX + " TEXT, " +
-                COLUMN_FRIENDS_TABLE + " TEXT" +
+                COLUMN_FRIENDS_LIST + " TEXT, " +
+                COLUMN_FRIENDS_REQUEST_LIST + " TEXT" +
                 ")";
 
         sqLiteDatabase.execSQL(createTableStatement);
@@ -59,7 +62,9 @@ public class DataBaseUsersListHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_PASSWORD, userDetails.password);
         contentValues.put(COLUMN_HOBBIES, userDetails.hobbies);
         contentValues.put(COLUMN_SEX, userDetails.sex);
-        contentValues.put(COLUMN_FRIENDS_TABLE, userDetails.friendsTable);
+        contentValues.put(COLUMN_FRIENDS_LIST, userDetails.getFriendsList());
+        contentValues.put(COLUMN_FRIENDS_REQUEST_LIST, userDetails.getFriendsRequestList());
+
 
         long insert = sqLiteDatabase.insert(ALL_USERS_TABLE, null, contentValues);
 
@@ -86,7 +91,8 @@ public class DataBaseUsersListHelper extends SQLiteOpenHelper {
                 String password = cursor.getString(5);
                 String hobbies = cursor.getString(6);
                 String sex = cursor.getString(7);
-                String friendsTable = cursor.getString(8);
+                String friendsList = cursor.getString(8);
+                String friendsRequestList = cursor.getString(9);
 
                 UserDetails userDetails = new UserDetails(
                         userID,
@@ -97,7 +103,8 @@ public class DataBaseUsersListHelper extends SQLiteOpenHelper {
                         password,
                         hobbies,
                         sex,
-                        friendsTable
+                        friendsList,
+                        friendsRequestList
                 );
                 returnList.add(userDetails);
             } while (cursor.moveToNext());
@@ -113,7 +120,7 @@ public class DataBaseUsersListHelper extends SQLiteOpenHelper {
     }
 
     // below is the method for updating our user based on the name
-    public boolean updateCourse(String originalName, UserDetails userDetails) {
+    public boolean updateUser(String originalName, UserDetails userDetails) {
 
         // calling a method to get writable database.
         SQLiteDatabase db = this.getWritableDatabase();
@@ -127,13 +134,38 @@ public class DataBaseUsersListHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_PASSWORD, userDetails.password);
         contentValues.put(COLUMN_HOBBIES, userDetails.hobbies);
         contentValues.put(COLUMN_SEX, userDetails.sex);
-        contentValues.put(COLUMN_FRIENDS_TABLE, userDetails.friendsTable);
 
         // on below line we are calling a update method to update our database and passing our values.
         // and we are comparing it with name of our course which is stored in original name variable.
         long insert = db.update(ALL_USERS_TABLE, contentValues, "COLUMN_EMAIL_ADDRESS=?", new String[]{originalName});
         db.close();
-        return insert!= -1;
+        return insert != -1;
+    }
+
+    // below is the method for updating our user based on the name
+    public boolean updateUserFriendRequestList(String originalName, String friendRequestToString) {
+        // calling a method to get writable database.
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_FRIENDS_REQUEST_LIST, friendRequestToString);
+        // on below line we are calling a update method to update our database and passing our values.
+        // and we are comparing it with name of our course which is stored in original name variable.
+        long insert = db.update(ALL_USERS_TABLE, contentValues, "COLUMN_EMAIL_ADDRESS=?", new String[]{originalName});
+        db.close();
+        return insert != -1;
+    }
+
+    // below is the method for updating our user based on the name
+    public boolean updateUserFriendList(String originalName, UserDetails userDetails) {
+        // calling a method to get writable database.
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_FRIENDS_LIST, userDetails.getFriendsList());
+        // on below line we are calling a update method to update our database and passing our values.
+        // and we are comparing it with name of our course which is stored in original name variable.
+        long insert = db.update(ALL_USERS_TABLE, contentValues, "COLUMN_EMAIL_ADDRESS=?", new String[]{originalName});
+        db.close();
+        return insert != -1;
     }
 
     @Override
@@ -141,5 +173,15 @@ public class DataBaseUsersListHelper extends SQLiteOpenHelper {
         // this method is called to check if the table exists already.
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ALL_USERS_TABLE);
         onCreate(sqLiteDatabase);
+    }
+
+    public Boolean deleteOne(FriendRequestData friendData) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        String queryString = "DELETE * FROM " + ALL_USERS_TABLE + " WHERE " + COLUMN_FULL_NAME + " = " + friendData.getFullName();
+
+        Cursor cursor = sqLiteDatabase.rawQuery(queryString, null);
+
+        return cursor.moveToFirst();
     }
 }

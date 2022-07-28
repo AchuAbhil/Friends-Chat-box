@@ -3,24 +3,25 @@ package com.northampton.friendschatbox.ui.activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.NavGraph;
 import androidx.navigation.NavInflater;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import com.bumptech.glide.Glide;
-import com.google.android.material.navigation.NavigationView;
 import com.northampton.friendschatbox.R;
 import com.northampton.friendschatbox.data.DataBaseUsersListHelper;
+import com.northampton.friendschatbox.data.models.FriendRequestData;
 import com.northampton.friendschatbox.data.models.UserDetails;
 import com.northampton.friendschatbox.databinding.ActivityLandingBinding;
 import com.northampton.friendschatbox.ui.BaseActivity;
 import com.northampton.friendschatbox.utils.AppPreferences;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -47,6 +48,12 @@ public class LandingActivity extends BaseActivity {
     }
 
     private void setUpNavHost() {
+        mAppPreferences = AppPreferences.getInstance(this);
+        userDetails = mAppPreferences.getUserInfo();
+        if(userDetails.getFriendsRequestList()!=null)
+        mAppPreferences.setAllFriendRequestToString(userDetails.getFriendsRequestList());
+        if(userDetails.getFriendsList()!=null)
+        mAppPreferences.setAllFriendsToString(userDetails.getFriendsList());
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_landing);
         assert navHostFragment != null;
         NavInflater navInflater = navHostFragment.getNavController().getNavInflater();
@@ -80,13 +87,57 @@ public class LandingActivity extends BaseActivity {
     }
 
     public void updateNavHeader() {
-        mAppPreferences = AppPreferences.getInstance(this);
-        userDetails = mAppPreferences.getUserInfo();
         navUsername.setText(userDetails.getFullName());
         navEmail.setText(userDetails.getEmailAddress());
     }
 
     public Boolean updateDBUserDetails(String originalName, UserDetails userDetails) {
-        return dataBaseUsersListHelper.updateCourse(originalName,userDetails);
+        return dataBaseUsersListHelper.updateUser(originalName, userDetails);
+    }
+
+    public Boolean updateDBFriendRequestList(String emailAddress, String friendRequestToString) {
+        return dataBaseUsersListHelper.updateUserFriendRequestList(emailAddress, friendRequestToString);
+    }
+
+    public List<UserDetails> getUsersList() {
+        List<UserDetails> userDetailsListMain = dataBaseUsersListHelper.getAllUsers(this);
+        List<UserDetails> userDetailsList = new ArrayList<>();
+        if (userDetailsListMain != null) {
+            if (userDetailsListMain.size() > 0) {
+                for (UserDetails user : userDetailsListMain) {
+                    if (!user.getFullName().equals(this.userDetails.getFullName())) {
+                        userDetailsList.add(user);
+                    }
+                }
+            }
+        }
+        return userDetailsList;
+    }
+
+    public void friendsRequestDBUpdateCheck(String emailAddress, String friendRequestToString) {
+        List<FriendRequestData> friendsList = mAppPreferences.getFriendsList();
+        if (friendsList != null) {
+            if (friendsList.size() > 0) {
+                for (FriendRequestData friends : friendsList) {
+                    if (friends.getFullName().equals(emailAddress)) {
+                        Toast.makeText(this, "Friend is all ready added to the user list.", Toast.LENGTH_LONG).show();
+                    } else {
+                        if (updateDBFriendRequestList(emailAddress, friendRequestToString)) {
+                            Toast.makeText(this, "Friend is all ready added to the user list..", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(this, "Update friend DB error ", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+            } else {
+                if (updateDBFriendRequestList(emailAddress, friendRequestToString)) {
+                    Toast.makeText(this, "Friend is all ready added to the user list..", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Update friend DB error ", Toast.LENGTH_LONG).show();
+                }
+            }
+        } else {
+            Toast.makeText(this, "friendsList is null.", Toast.LENGTH_LONG).show();
+        }
     }
 }

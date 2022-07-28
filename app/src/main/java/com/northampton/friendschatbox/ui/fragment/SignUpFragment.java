@@ -54,6 +54,8 @@ public class SignUpFragment extends BaseFragment {
         getDateTime();
         userDetails.setDateRegistered(getDateTime());
         userDetails.setDateUpdated(getDateTime());
+        userDetails.setFriendsList(getAppPreferences().getAllFriendsToString());
+        userDetails.setFriendsRequestList(getAppPreferences().getAllFriendRequestToString());
         registerBtnClick();
     }
 
@@ -82,7 +84,6 @@ public class SignUpFragment extends BaseFragment {
                 if (s != null) {
                     binding.edtFullName.setHelperText(getString(R.string.empty_string));
                     userDetails.setFullName(s.toString());
-                    userDetails.setFriendsTable(s + ".db");
                 }
             }
 

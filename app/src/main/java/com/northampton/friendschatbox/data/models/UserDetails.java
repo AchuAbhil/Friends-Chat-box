@@ -3,6 +3,8 @@ package com.northampton.friendschatbox.data.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 public class UserDetails implements Parcelable {
 
     public static final Parcelable.Creator<UserDetails> CREATOR = new Parcelable.Creator<UserDetails>() {
@@ -24,7 +26,8 @@ public class UserDetails implements Parcelable {
     public String password;
     public String hobbies;
     public String sex;
-    public String friendsTable;
+    public String friendsRequestList;
+    public String friendsList;
 
     public UserDetails() {
     }
@@ -38,7 +41,8 @@ public class UserDetails implements Parcelable {
             String password,
             String hobbies,
             String sex,
-            String friendsTable
+            String friendRequestDataList,
+            String friendsList
     ) {
         this.userId = userId;
         this.fullName = fullName;
@@ -48,7 +52,8 @@ public class UserDetails implements Parcelable {
         this.password = password;
         this.hobbies = hobbies;
         this.sex = sex;
-        this.friendsTable = friendsTable;
+        this.friendsRequestList = friendRequestDataList;
+        this.friendsList = friendsList;
     }
 
     public UserDetails(
@@ -58,8 +63,7 @@ public class UserDetails implements Parcelable {
             String dateUpdated,
             String password,
             String hobbies,
-            String sex,
-            String friendsTable
+            String sex
     ) {
         this.fullName = fullName;
         this.emailAddress = emailAddress;
@@ -68,7 +72,6 @@ public class UserDetails implements Parcelable {
         this.password = password;
         this.hobbies = hobbies;
         this.sex = sex;
-        this.friendsTable = friendsTable;
     }
 
     protected UserDetails(Parcel in) {
@@ -79,7 +82,8 @@ public class UserDetails implements Parcelable {
         this.dateUpdated = in.readString();
         this.password = in.readString();
         this.sex = in.readString();
-        this.friendsTable = in.readString();
+        this.friendsRequestList = in.readString();
+        this.friendsList = in.readString();
     }
 
     public int getUserId() {
@@ -146,12 +150,20 @@ public class UserDetails implements Parcelable {
         this.sex = sex;
     }
 
-    public String getFriendsTable() {
-        return friendsTable;
+    public String getFriendsRequestList() {
+        return friendsRequestList;
     }
 
-    public void setFriendsTable(String friendsTable) {
-        this.friendsTable = friendsTable;
+    public void setFriendsRequestList(String friendsRequestList) {
+        this.friendsRequestList = friendsRequestList;
+    }
+
+    public String getFriendsList() {
+        return friendsList;
+    }
+
+    public void setFriendsList(String friendsList) {
+        this.friendsList = friendsList;
     }
 
     @Override
@@ -168,6 +180,7 @@ public class UserDetails implements Parcelable {
         dest.writeString(this.dateUpdated);
         dest.writeString(this.password);
         dest.writeString(this.sex);
-        dest.writeString(this.friendsTable);
+        dest.writeString(this.friendsRequestList);
+        dest.writeString(this.friendsList);
     }
 }

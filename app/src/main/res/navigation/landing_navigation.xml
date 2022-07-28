@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/friendsRequestFragment"
-        android:name="com.northampton.friendschatbox.ui.fragment.FriendsRequestFragment"
+        android:name="com.northampton.friendschatbox.ui.fragment.FriendRequest.FriendsRequestFragment"
         android:label="@string/fragment_friends_request"
         tools:layout="@layout/fragment_friends_request" />
 
