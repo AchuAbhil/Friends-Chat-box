@@ -12,14 +12,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.Navigation;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.northampton.friendschatbox.R;
+import com.northampton.friendschatbox.data.models.FriendRequestData;
 import com.northampton.friendschatbox.data.models.UserDetails;
 import com.northampton.friendschatbox.databinding.FragmentSignInBinding;
 import com.northampton.friendschatbox.ui.BaseFragment;
 import com.northampton.friendschatbox.ui.activity.MainActivity;
 import com.northampton.friendschatbox.utils.AppPreferences;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 public class SignInFragment extends BaseFragment {
@@ -65,6 +71,8 @@ public class SignInFragment extends BaseFragment {
             );
             if (userDetailsHashMap.containsKey(true)) {
                 getAppPreferences().setUserInfo(userDetailsHashMap.get(true));
+                getAppPreferences().setAllFriendRequest(convertToList(Objects.requireNonNull(userDetailsHashMap.get(true)).getFriendsRequestList()));
+                getAppPreferences().setAllFriends(convertToList(Objects.requireNonNull(userDetailsHashMap.get(true)).getFriendsList()));
                 ((MainActivity) requireActivity()).navigateToLanding();
             } else {
                 Toast.makeText(requireActivity(), "UserName: " + binding.edtUsername.getEditText().getText().toString() + ",Is not registered kindly register.", Toast.LENGTH_LONG).show();
@@ -123,5 +131,19 @@ public class SignInFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public List<FriendRequestData> convertToList(String json) {
+        List<FriendRequestData> temp;
+        Gson gson = new Gson();
+
+        if (json.isEmpty()) {
+            temp = new ArrayList<>();
+        } else {
+            Type type = new TypeToken<List<FriendRequestData>>() {
+            }.getType();
+            temp = gson.fromJson(json, type);
+        }
+        return temp;
     }
 }

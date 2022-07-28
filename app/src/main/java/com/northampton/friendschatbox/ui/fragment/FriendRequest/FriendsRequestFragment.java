@@ -5,10 +5,10 @@ import static com.northampton.friendschatbox.ui.fragment.SplashScreenFragment.SP
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,14 +33,14 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendsRequestFragment extends BaseFragment implements AdapterInterface{
+public class FriendsRequestFragment extends BaseFragment implements AdapterInterface {
 
     String SearchData = "";
     Integer friendId = 0;
     List<UserDetails> userList = new ArrayList<>();
+    List<FriendRequestData> friendRequestList = new ArrayList<>();
     private AdapterInterface adapterInterface;
     private FragmentFriendsRequestBinding binding;
-    List<FriendRequestData> friendRequestList = new ArrayList<>();
 
     public FriendsRequestFragment() {
         // Required empty public constructor
@@ -92,10 +92,10 @@ public class FriendsRequestFragment extends BaseFragment implements AdapterInter
     private void findFriend(String userName) {
         userList.clear();
         userList.addAll(((LandingActivity) requireActivity()).getUsersList());
-        if(userList!=null && !userList.isEmpty()) {
+        if (userList != null && !userList.isEmpty()) {
             binding.rvUser.setVisibility(View.VISIBLE);
             binding.tvNoDBMessage.setVisibility(View.GONE);
-        }else {
+        } else {
             binding.rvUser.setVisibility(View.GONE);
             binding.tvNoDBMessage.setVisibility(View.VISIBLE);
         }
@@ -104,19 +104,19 @@ public class FriendsRequestFragment extends BaseFragment implements AdapterInter
 
     @Override
     public void onItemClicked(UserDetails userDetails, String email) {
+        friendRequestList.clear();
+        if (getAppPreferences().getAllFriendRequest() != null) {
+            friendRequestList = getAppPreferences().getAllFriendRequest();
+        }
         Handler handler = new Handler();
         binding.rvUser.setEnabled(false);
         showProgressBar(true);
         FriendRequestData friendRequest = new FriendRequestData();
         handler.postDelayed(() -> {
-            Toast.makeText(getContext(),"Item clicked name: "+userDetails.getFullName(),Toast.LENGTH_LONG).show();
             friendRequest.setFullName(userDetails.getFullName());
             friendRequest.setEmailAddress(userDetails.getEmailAddress());
             friendRequest.setRequestedAccepted(false);
-            friendRequestList.add(friendRequest);
-            getAppPreferences().setFriendsRequestList(friendRequestList);
-            getAppPreferences().getAllFriendRequestToString();
-            ((LandingActivity) requireActivity()).friendsRequestDBUpdateCheck(userDetails.getEmailAddress(), getAppPreferences().getAllFriendRequestToString());
+            ((LandingActivity) requireActivity()).friendsRequestDBUpdateCheck(userDetails.getEmailAddress(), friendRequest);
             showProgressBar(false);
             binding.rvUser.setEnabled(true);
         }, SPLASH_SCREEN_TIME_OUT);

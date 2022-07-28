@@ -54,8 +54,8 @@ public class SignUpFragment extends BaseFragment {
         getDateTime();
         userDetails.setDateRegistered(getDateTime());
         userDetails.setDateUpdated(getDateTime());
-        userDetails.setFriendsList(getAppPreferences().getAllFriendsToString());
-        userDetails.setFriendsRequestList(getAppPreferences().getAllFriendRequestToString());
+        userDetails.setFriendsList("");
+        userDetails.setFriendsRequestList("");
         registerBtnClick();
     }
 

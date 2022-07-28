@@ -1,6 +1,7 @@
 package com.northampton.friendschatbox.ui.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,6 +13,7 @@ import androidx.navigation.NavInflater;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.gson.Gson;
 import com.northampton.friendschatbox.R;
 import com.northampton.friendschatbox.data.DataBaseUsersListHelper;
 import com.northampton.friendschatbox.data.models.FriendRequestData;
@@ -21,6 +23,7 @@ import com.northampton.friendschatbox.ui.BaseActivity;
 import com.northampton.friendschatbox.utils.AppPreferences;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -50,10 +53,6 @@ public class LandingActivity extends BaseActivity {
     private void setUpNavHost() {
         mAppPreferences = AppPreferences.getInstance(this);
         userDetails = mAppPreferences.getUserInfo();
-        if(userDetails.getFriendsRequestList()!=null)
-        mAppPreferences.setAllFriendRequestToString(userDetails.getFriendsRequestList());
-        if(userDetails.getFriendsList()!=null)
-        mAppPreferences.setAllFriendsToString(userDetails.getFriendsList());
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_landing);
         assert navHostFragment != null;
         NavInflater navInflater = navHostFragment.getNavController().getNavInflater();
@@ -95,7 +94,7 @@ public class LandingActivity extends BaseActivity {
         return dataBaseUsersListHelper.updateUser(originalName, userDetails);
     }
 
-    public Boolean updateDBFriendRequestList(String emailAddress, String friendRequestToString) {
+    public HashMap<Boolean, String> updateDBFriendRequestList(String emailAddress, String friendRequestToString) {
         return dataBaseUsersListHelper.updateUserFriendRequestList(emailAddress, friendRequestToString);
     }
 
@@ -114,30 +113,60 @@ public class LandingActivity extends BaseActivity {
         return userDetailsList;
     }
 
-    public void friendsRequestDBUpdateCheck(String emailAddress, String friendRequestToString) {
-        List<FriendRequestData> friendsList = mAppPreferences.getFriendsList();
-        if (friendsList != null) {
-            if (friendsList.size() > 0) {
-                for (FriendRequestData friends : friendsList) {
-                    if (friends.getFullName().equals(emailAddress)) {
-                        Toast.makeText(this, "Friend is all ready added to the user list.", Toast.LENGTH_LONG).show();
-                    } else {
-                        if (updateDBFriendRequestList(emailAddress, friendRequestToString)) {
-                            Toast.makeText(this, "Friend is all ready added to the user list..", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(this, "Update friend DB error ", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }
-            } else {
-                if (updateDBFriendRequestList(emailAddress, friendRequestToString)) {
-                    Toast.makeText(this, "Friend is all ready added to the user list..", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(this, "Update friend DB error ", Toast.LENGTH_LONG).show();
-                }
+    public void friendsRequestDBUpdateCheck(String emailAddress, FriendRequestData friendRequest) {
+        List<FriendRequestData> friendsList = new ArrayList<>();
+        List<FriendRequestData> friendRequestList = new ArrayList<>();
+        if (mAppPreferences.getAllFriends() != null) {
+            friendsList = mAppPreferences.getAllFriends();
+        }
+        if (mAppPreferences.getAllFriendRequest() != null) {
+            friendRequestList = mAppPreferences.getAllFriendRequest();
+        }
+        // if the logged in user has all ready been friends or not check is doing below
+        if (friendsList.size() > 0) {
+            if(!checkIfEmailPreExist(emailAddress, friendsList, "friendsList")) {
+                UpdateDB(emailAddress, friendRequest, friendRequestList);
             }
         } else {
-            Toast.makeText(this, "friendsList is null.", Toast.LENGTH_LONG).show();
+            if (friendRequestList.size() > 0) {
+                if(!checkIfEmailPreExist(emailAddress, friendRequestList, "friendRequestList")) {
+                    UpdateDB(emailAddress, friendRequest, friendRequestList);
+                }
+            }else {
+                friendRequestList.add(friendRequest);
+                UpdateDB(emailAddress, friendRequest, friendRequestList);
+            }
         }
+    }
+
+    private void UpdateDB(String emailAddress, FriendRequestData friendRequest, List<FriendRequestData> friendRequestList) {
+        friendRequestList.add(friendRequest);
+        if (updateDBFriendRequestList(emailAddress, getFriendsListToString(friendRequestList)).containsKey(true)) {
+            mAppPreferences.setAllFriendRequest(friendRequestList);
+            Toast.makeText(this, friendRequest.getFullName()+" is added to your friends list", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Update friend DB error ", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private Boolean checkIfEmailPreExist(String emailAddress, List<FriendRequestData> friendsList, String list) {
+        String toastMsg = "";
+        if(list.equals("friendsList")){
+            toastMsg = " is all ready added to the user list.";
+        }else {
+            toastMsg = " is all ready added to the friend request list.";
+        }
+        for (FriendRequestData friends : friendsList) {
+            if (friends.getEmailAddress().equals(emailAddress)) {
+                Toast.makeText(this, friends.getFullName() + toastMsg, Toast.LENGTH_LONG).show();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String getFriendsListToString(List<FriendRequestData> friendRequestList) {
+        Gson gson = new Gson();
+        return gson.toJson(friendRequestList);
     }
 }
