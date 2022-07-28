@@ -113,7 +113,7 @@ public class LandingActivity extends BaseActivity {
         return userDetailsList;
     }
 
-    public void friendsRequestDBUpdateCheck(String emailAddress, FriendRequestData friendRequest) {
+    public void friendsRequestDBUpdateCheck(String emailAddress, FriendRequestData friendRequest, String CurrentUserEmailAddress) {
         List<FriendRequestData> friendsList = new ArrayList<>();
         List<FriendRequestData> friendRequestList = new ArrayList<>();
         if (mAppPreferences.getAllFriends() != null) {
@@ -124,17 +124,16 @@ public class LandingActivity extends BaseActivity {
         }
         // if the logged in user has all ready been friends or not check is doing below
         if (friendsList.size() > 0) {
-            if(!checkIfEmailPreExist(emailAddress, friendsList, "friendsList")) {
+            if(!checkIfEmailPreExist(CurrentUserEmailAddress, friendsList, "friendsList")) {
                 UpdateDB(emailAddress, friendRequest, friendRequestList);
             }
         } else {
             if (friendRequestList.size() > 0) {
-                if(!checkIfEmailPreExist(emailAddress, friendRequestList, "friendRequestList")) {
+                if(!checkIfEmailPreExist(CurrentUserEmailAddress, friendRequestList, "friendRequestList")) {
                     UpdateDB(emailAddress, friendRequest, friendRequestList);
                 }
             }else {
-                friendRequestList.add(friendRequest);
-                UpdateDB(emailAddress, friendRequest, friendRequestList);
+                UpdateDB(CurrentUserEmailAddress, friendRequest, friendRequestList);
             }
         }
     }

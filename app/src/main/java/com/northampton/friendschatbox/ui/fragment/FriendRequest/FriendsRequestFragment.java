@@ -39,6 +39,7 @@ public class FriendsRequestFragment extends BaseFragment implements AdapterInter
     Integer friendId = 0;
     List<UserDetails> userList = new ArrayList<>();
     List<FriendRequestData> friendRequestList = new ArrayList<>();
+    UserDetails userDetails = new UserDetails();
     private AdapterInterface adapterInterface;
     private FragmentFriendsRequestBinding binding;
 
@@ -90,6 +91,7 @@ public class FriendsRequestFragment extends BaseFragment implements AdapterInter
     }
 
     private void findFriend(String userName) {
+        userDetails = getAppPreferences().getUserInfo();
         userList.clear();
         userList.addAll(((LandingActivity) requireActivity()).getUsersList());
         if (userList != null && !userList.isEmpty()) {
@@ -116,7 +118,7 @@ public class FriendsRequestFragment extends BaseFragment implements AdapterInter
             friendRequest.setFullName(userDetails.getFullName());
             friendRequest.setEmailAddress(userDetails.getEmailAddress());
             friendRequest.setRequestedAccepted(false);
-            ((LandingActivity) requireActivity()).friendsRequestDBUpdateCheck(userDetails.getEmailAddress(), friendRequest);
+            ((LandingActivity) requireActivity()).friendsRequestDBUpdateCheck(userDetails.getEmailAddress(), friendRequest, userDetails.emailAddress);
             showProgressBar(false);
             binding.rvUser.setEnabled(true);
         }, SPLASH_SCREEN_TIME_OUT);
