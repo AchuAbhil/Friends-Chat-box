@@ -18,20 +18,24 @@ public class FriendRequestData implements Parcelable {
     };
     private String fullName;
     private String emailAddress;
+    private String dateBecomeBuddy;
     private Boolean isRequestedAccepted;
 
     public FriendRequestData() {
     }
 
-    public FriendRequestData(String fullName, String emailAddress, Boolean isRequestedAccepted) {
+    public FriendRequestData(String fullName, String emailAddress, Boolean isRequestedAccepted, String dateBecomeBuddy) {
         this.fullName = fullName;
         this.emailAddress = emailAddress;
         this.isRequestedAccepted = isRequestedAccepted;
+        this.dateBecomeBuddy = dateBecomeBuddy;
     }
 
     protected FriendRequestData(Parcel in) {
         this.fullName = in.readString();
         this.emailAddress = in.readString();
+        this.emailAddress = in.readString();
+        this.dateBecomeBuddy = in.readString();
         this.isRequestedAccepted = (Boolean) in.readValue(Boolean.class.getClassLoader());
     }
 
@@ -55,6 +59,14 @@ public class FriendRequestData implements Parcelable {
         return isRequestedAccepted;
     }
 
+    public String getDateBecomeBuddy() {
+        return dateBecomeBuddy;
+    }
+
+    public void setDateBecomeBuddy(String dateBecomeBuddy) {
+        this.dateBecomeBuddy = dateBecomeBuddy;
+    }
+
     public void setRequestedAccepted(Boolean requestedAccepted) {
         isRequestedAccepted = requestedAccepted;
     }
@@ -69,5 +81,6 @@ public class FriendRequestData implements Parcelable {
         dest.writeString(this.fullName);
         dest.writeString(this.emailAddress);
         dest.writeValue(this.isRequestedAccepted);
+        dest.writeValue(this.dateBecomeBuddy);
     }
 }

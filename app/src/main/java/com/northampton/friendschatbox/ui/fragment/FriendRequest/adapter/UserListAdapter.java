@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.northampton.friendschatbox.data.models.FriendRequestData;
 import com.northampton.friendschatbox.databinding.ViewListUserViewBinding;
-import com.northampton.friendschatbox.ui.fragment.SearchFriend.adapter.AdapterInterface;
 
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.holder
 
         holder.itemBinding.imgChecked.setOnClickListener(v -> {
             holder.itemBinding.imgChecked.setEnabled(false);
-            buttonListener.onItemClicked(contact, contact.getEmailAddress());
+            buttonListener.onAddItemClicked(contact, contact.getEmailAddress());
             holder.itemBinding.imgChecked.setEnabled(true);
         });
 

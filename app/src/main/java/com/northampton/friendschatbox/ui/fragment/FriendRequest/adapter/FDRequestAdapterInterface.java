@@ -5,7 +5,7 @@ import com.northampton.friendschatbox.data.models.UserDetails;
 
 public interface FDRequestAdapterInterface {
 
-    void onItemClicked(FriendRequestData userDetails, String email);
+    void onAddItemClicked(FriendRequestData userDetails, String email);
 
     void onDeleteCtaClicked(FriendRequestData userDetails, String email);
 

@@ -1,7 +1,11 @@
 package com.northampton.friendschatbox.ui.fragment.FriendRequest;
 
 
+import static com.northampton.friendschatbox.ui.fragment.SplashScreenFragment.SPLASH_SCREEN_TIME_OUT;
+
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +21,12 @@ import com.northampton.friendschatbox.data.models.FriendRequestData;
 import com.northampton.friendschatbox.data.models.UserDetails;
 import com.northampton.friendschatbox.databinding.FragmentFriendsRequestBinding;
 import com.northampton.friendschatbox.ui.BaseFragment;
+import com.northampton.friendschatbox.ui.activity.LandingActivity;
 import com.northampton.friendschatbox.ui.fragment.FriendRequest.adapter.FDRequestAdapterInterface;
 import com.northampton.friendschatbox.ui.fragment.FriendRequest.adapter.UserListAdapter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -29,8 +35,10 @@ import java.util.List;
  */
 public class FriendsRequestFragment extends BaseFragment implements FDRequestAdapterInterface {
 
+    private static final String TAG = FriendsRequestFragment.class.getName();
     UserDetails userDetails = new UserDetails();
     List<FriendRequestData> friendRequestList = new ArrayList<>();
+    FriendRequestData currentFriendRequestData = new FriendRequestData();
     private FragmentFriendsRequestBinding binding;
     private FDRequestAdapterInterface adapterInterface;
 
@@ -55,6 +63,11 @@ public class FriendsRequestFragment extends BaseFragment implements FDRequestAda
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         adapterInterface = this;
+        userDetails = getAppPreferences().getUserInfo();
+        currentFriendRequestData.setRequestedAccepted(false);
+        currentFriendRequestData.setEmailAddress(userDetails.getEmailAddress());
+        currentFriendRequestData.setFullName(userDetails.getFullName());
+        userDetails = getAppPreferences().getUserInfo();
         findFriendRequest();
     }
 
@@ -64,10 +77,9 @@ public class FriendsRequestFragment extends BaseFragment implements FDRequestAda
     }
 
     private void findFriendRequest() {
-        userDetails = getAppPreferences().getUserInfo();
         friendRequestList.clear();
         friendRequestList.addAll(getAppPreferences().getAllFriendRequest());
-        if (friendRequestList != null && !friendRequestList.isEmpty()) {
+        if (friendRequestList != null && !friendRequestList.isEmpty() && friendRequestList.size()>0) {
             binding.rvUser.setVisibility(View.VISIBLE);
             binding.tvNoDBMessage.setVisibility(View.GONE);
         } else {
@@ -78,8 +90,25 @@ public class FriendsRequestFragment extends BaseFragment implements FDRequestAda
     }
 
     @Override
-    public void onItemClicked(FriendRequestData userDetails, String email) {
-
+    public void onAddItemClicked(FriendRequestData clickedUserDetails, String email) {
+        friendRequestList.clear();
+        if (getAppPreferences().getAllFriendRequest() != null) {
+            friendRequestList = getAppPreferences().getAllFriendRequest();
+        }
+        Handler handler = new Handler();
+        binding.rvUser.setEnabled(false);
+        showProgressBar(true);
+        FriendRequestData friendRequest = new FriendRequestData();
+        Log.d(TAG, "getEmailAddress: "+userDetails.getEmailAddress());
+        handler.postDelayed(() -> {
+            friendRequest.setFullName(clickedUserDetails.getFullName());
+            friendRequest.setEmailAddress(clickedUserDetails.getEmailAddress());
+            friendRequest.setRequestedAccepted(false);
+            ((LandingActivity) requireActivity()).friendsListDBUpdateCheck(friendRequest, currentFriendRequestData);
+            showProgressBar(false);
+            binding.rvUser.setEnabled(true);
+            findFriendRequest();
+        }, SPLASH_SCREEN_TIME_OUT);
     }
 
     @Override

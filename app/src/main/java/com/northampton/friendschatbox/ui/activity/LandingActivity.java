@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -103,9 +102,102 @@ public class LandingActivity extends BaseActivity {
         return dataBaseUsersListHelper.updateUserFriendRequestList(emailAddress, friendRequestToString);
     }
 
-    public Boolean updateFriendsList(String emailAddress, String friendRequestToString){
-        return dataBaseUsersListHelper.updateRequestFriendList(emailAddress, friendRequestToString);
+    public HashMap<Boolean, String> updateDBFriendList(String emailAddress, String friendRequestToString) {
+        return dataBaseUsersListHelper.updateUserFriendList(emailAddress, friendRequestToString);
     }
+
+    public void friendsListDBUpdateCheck(FriendRequestData clickedFriendData, FriendRequestData currentFriendData) {
+        List<FriendRequestData> currentFriendsList = new ArrayList<>();
+        List<FriendRequestData> clickedFriendsList = getFriendList(clickedFriendData.getEmailAddress());
+        List<FriendRequestData> currentFriendRequestList = new ArrayList<>();
+        List<FriendRequestData> clickedFriendRequestList = getFriendRequestList(clickedFriendData.getEmailAddress());
+        if (mAppPreferences.getAllFriends() != null) {
+            currentFriendsList = mAppPreferences.getAllFriends();
+        }
+        if (mAppPreferences.getAllFriendRequest() != null) {
+            currentFriendRequestList = mAppPreferences.getAllFriendRequest();
+        }
+        // if the logged in user has all ready been friends or not check is doing below
+        if (currentFriendsList.size() > 0) {
+            //check if current friends list contain clicked email
+            if (!checkIfEmailPreExist(clickedFriendData.getEmailAddress(), currentFriendsList, "friendsList")) {
+                Log.d(TAG, "friendsListDBUpdateCheck CurrentUserEmailAddress: " + currentFriendData.getEmailAddress());
+                UpdateFDListDB(currentFriendData, clickedFriendData, currentFriendsList, clickedFriendsList, currentFriendRequestList, clickedFriendRequestList);
+            } else {
+                deleteFDRQListDB(currentFriendData, clickedFriendData, currentFriendRequestList, clickedFriendRequestList);
+            }
+        } else {
+            UpdateFDListDB(currentFriendData, clickedFriendData, currentFriendsList, clickedFriendsList, currentFriendRequestList, clickedFriendRequestList);
+        }
+    }
+
+    private void UpdateFDListDB(
+            FriendRequestData currentFriendData,
+            FriendRequestData clickedFriendData,
+            List<FriendRequestData> currentFriendsList,
+            List<FriendRequestData> clickedFriendsList,
+            List<FriendRequestData> currentFriendRequestList,
+            List<FriendRequestData> clickedFriendRequestList
+    ) {
+        currentFriendsList.add(clickedFriendData);
+        List<FriendRequestData> currentFriendLists = removeDuplicates(currentFriendsList);
+        Log.d(TAG, "UpdateFDListDB currentEmailAddress: " + currentFriendData.getEmailAddress() + " getFriendsListToString: " + getFriendsListToString(currentFriendLists));
+        if (updateDBFriendList(currentFriendData.getEmailAddress(), getFriendsListToString(currentFriendLists)).containsKey(true)) {
+            mAppPreferences.setAllFriends(currentFriendLists);
+            //check if clicked friends list contain current email
+            if (!checkIfEmailPreExist(currentFriendData.getEmailAddress(), clickedFriendsList)) {
+                clickedFriendsList.add(currentFriendData);
+                List<FriendRequestData> clickedFriendList = removeDuplicates(clickedFriendsList);
+                Log.d(TAG, "UpdateFDListDB ClickedEmailAddress: " + clickedFriendData.getEmailAddress() + " getFriendsListToString: " + getFriendsListToString(clickedFriendList));
+                updateDBFriendList(clickedFriendData.getEmailAddress(), getFriendsListToString(clickedFriendList));
+            }
+            deleteFDRQListDB(currentFriendData, clickedFriendData, currentFriendRequestList, clickedFriendRequestList);
+            Toast.makeText(this, clickedFriendData.getFullName() + " is added to your friends list", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Update friend DB error ", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void deleteFDRQListDB(FriendRequestData currentFriendRequest, FriendRequestData clickedFriendRequest, List<FriendRequestData> currentFriendRequestList, List<FriendRequestData> clickedFriendRequestList) {
+        if (currentFriendRequestList.size() > 0) {
+            currentFriendRequestList = removeItem(currentFriendRequestList, clickedFriendRequest);
+        }
+        List<FriendRequestData> currentFriendRequestLists = removeDuplicates(currentFriendRequestList);
+        Log.d(TAG, "deleteFDRQListDB currentEmailAddress: " + currentFriendRequest.getEmailAddress() + " getFriendsListToString: " + getFriendsListToString(currentFriendRequestLists));
+        if (updateDBFriendRequestList(currentFriendRequest.getEmailAddress(), getFriendsListToString(currentFriendRequestLists)).containsKey(true)) {
+            mAppPreferences.setAllFriendRequest(currentFriendRequestList);
+            //check if clicked friends request list contain current email
+            if (checkIfEmailPreExist(currentFriendRequest.getEmailAddress(), clickedFriendRequestList)) {
+                if (clickedFriendRequestList.size() > 0) {
+                    clickedFriendRequestList = removeItem(clickedFriendRequestList, currentFriendRequest);
+                    List<FriendRequestData> clickedFriendRequestsList = removeDuplicates(clickedFriendRequestList);
+                    Log.d(TAG, "deleteFDRQListDB ClickedEmailAddress: " + clickedFriendRequest.getEmailAddress() + " getFriendsListToString: " + getFriendsListToString(clickedFriendRequestsList));
+                    updateDBFriendRequestList(clickedFriendRequest.getEmailAddress(), getFriendsListToString(clickedFriendRequestsList));
+                }
+            }
+        } else {
+            Toast.makeText(this, "Update friend DB error ", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private List<FriendRequestData> removeItem(List<FriendRequestData> currentFriendRequestList, FriendRequestData clickedFriendRequest) {
+        List<FriendRequestData> friendRequestData = new ArrayList<>();
+        FriendRequestData userDetails = new FriendRequestData();
+        if (currentFriendRequestList != null) {
+            if (currentFriendRequestList.size() > 0) {
+                for (FriendRequestData user : currentFriendRequestList) {
+                    if (user.getEmailAddress() != null) {
+                        if (!user.getEmailAddress().equals(clickedFriendRequest.getEmailAddress())) {
+                            userDetails = user;
+                        }
+                    }
+                }
+            }
+        }
+        friendRequestData.add(userDetails);
+        return friendRequestData;
+    }
+
 
     public List<UserDetails> getUsersList() {
         List<UserDetails> userDetailsListMain = dataBaseUsersListHelper.getAllUsers(this);
@@ -113,7 +205,7 @@ public class LandingActivity extends BaseActivity {
         if (userDetailsListMain != null) {
             if (userDetailsListMain.size() > 0) {
                 for (UserDetails user : userDetailsListMain) {
-                    if (!user.getFullName().equals(this.userDetails.getFullName())) {
+                    if (!user.getFullName().equals(this.userDetails.getFullName()) && user.getFullName() != null) {
                         userDetailsList.add(user);
                     }
                 }
@@ -129,14 +221,32 @@ public class LandingActivity extends BaseActivity {
         if (userDetailsListMain != null) {
             if (userDetailsListMain.size() > 0) {
                 for (UserDetails user : userDetailsListMain) {
-                    if (user.getEmailAddress().equals(emailAddress)) {
+                    if (user.getEmailAddress().equals(emailAddress) && user.getFullName() != null) {
                         userDetails = user;
                     }
                 }
             }
         }
         friendRequestData = convertToList(userDetails.getFriendsRequestList());
-        Log.d(TAG, "ClickedEmailAddress: "+userDetails.getFriendsRequestList());
+        Log.d(TAG, "fdRqEmailAddress: " + userDetails.getFriendsRequestList());
+        return friendRequestData;
+    }
+
+    public List<FriendRequestData> getFriendList(String emailAddress) {
+        List<UserDetails> userDetailsListMain = dataBaseUsersListHelper.getAllUsers(this);
+        List<FriendRequestData> friendRequestData;
+        UserDetails userDetails = new UserDetails();
+        if (userDetailsListMain != null) {
+            if (userDetailsListMain.size() > 0) {
+                for (UserDetails user : userDetailsListMain) {
+                    if (user.getEmailAddress().equals(emailAddress)) {
+                        userDetails = user;
+                    }
+                }
+            }
+        }
+        friendRequestData = convertToList(userDetails.getFriendsList());
+        Log.d(TAG, "fdListEmailAddress: " + userDetails.getFriendsList());
         return friendRequestData;
     }
 
@@ -153,37 +263,37 @@ public class LandingActivity extends BaseActivity {
         // if the logged in user has all ready been friends or not check is doing below
         if (friendsList.size() > 0) {
             //check if current friends request list contain clicked email
-            if(!checkIfEmailPreExist(clickedFriendRequest.getEmailAddress(), friendsList, "friendsList")) {
-                Log.d(TAG, "CurrentUserEmailAddress: "+currentFriendRequest.getEmailAddress());
-                UpdateDB(currentFriendRequest, clickedFriendRequest, currentFriendRequestList, clickedFriendRequestList);
+            if (!checkIfEmailPreExist(clickedFriendRequest.getEmailAddress(), friendsList, "friendsList")) {
+                Log.d(TAG, "CurrentUserEmailAddress: " + currentFriendRequest.getEmailAddress());
+                UpdateFDRQDB(currentFriendRequest, clickedFriendRequest, currentFriendRequestList, clickedFriendRequestList);
             }
         } else {
             if (currentFriendRequestList.size() > 0) {
                 //check if current friends request list contain clicked email
-                if(!checkIfEmailPreExist(clickedFriendRequest.getEmailAddress(), currentFriendRequestList, "friendRequestList")) {
-                    Log.d(TAG, "CurrentUserEmailAddress: "+userDetails.getFriendsRequestList());
-                    UpdateDB(currentFriendRequest, clickedFriendRequest, currentFriendRequestList, clickedFriendRequestList);
+                if (!checkIfEmailPreExist(clickedFriendRequest.getEmailAddress(), currentFriendRequestList, "friendRequestList")) {
+                    Log.d(TAG, "CurrentUserEmailAddress: " + userDetails.getFriendsRequestList());
+                    UpdateFDRQDB(currentFriendRequest, clickedFriendRequest, currentFriendRequestList, clickedFriendRequestList);
                 }
-            }else {
-                UpdateDB(currentFriendRequest, clickedFriendRequest, currentFriendRequestList, clickedFriendRequestList);
+            } else {
+                UpdateFDRQDB(currentFriendRequest, clickedFriendRequest, currentFriendRequestList, clickedFriendRequestList);
             }
         }
     }
 
-    private void UpdateDB(FriendRequestData currentFriendRequest, FriendRequestData clickedFriendRequest, List<FriendRequestData> currentFriendRequestList, List<FriendRequestData> clickedFriendRequestList) {
+    private void UpdateFDRQDB(FriendRequestData currentFriendRequest, FriendRequestData clickedFriendRequest, List<FriendRequestData> currentFriendRequestList, List<FriendRequestData> clickedFriendRequestList) {
         currentFriendRequestList.add(clickedFriendRequest);
         List<FriendRequestData> currentFriendRequestLists = removeDuplicates(currentFriendRequestList);
-        Log.d(TAG, "currentEmailAddress: "+currentFriendRequest.getEmailAddress()+" getFriendsListToString: "+getFriendsListToString(currentFriendRequestLists));
+        Log.d(TAG, "currentEmailAddress: " + currentFriendRequest.getEmailAddress() + " getFriendsListToString: " + getFriendsListToString(currentFriendRequestLists));
         if (updateDBFriendRequestList(currentFriendRequest.getEmailAddress(), getFriendsListToString(currentFriendRequestLists)).containsKey(true)) {
             mAppPreferences.setAllFriendRequest(currentFriendRequestList);
             //check if clicked friends request list contain current email
-            if (!checkIfEmailPreExist(currentFriendRequest.getEmailAddress(),clickedFriendRequestList)){
+            if (!checkIfEmailPreExist(currentFriendRequest.getEmailAddress(), clickedFriendRequestList)) {
                 clickedFriendRequestList.add(currentFriendRequest);
                 List<FriendRequestData> clickedFriendRequestsList = removeDuplicates(clickedFriendRequestList);
-                Log.d(TAG, "ClickedEmailAddress: "+clickedFriendRequest.getEmailAddress()+" getFriendsListToString: "+getFriendsListToString(clickedFriendRequestsList));
+                Log.d(TAG, "ClickedEmailAddress: " + clickedFriendRequest.getEmailAddress() + " getFriendsListToString: " + getFriendsListToString(clickedFriendRequestsList));
                 updateDBFriendRequestList(clickedFriendRequest.getEmailAddress(), getFriendsListToString(clickedFriendRequestsList));
             }
-            Toast.makeText(this, clickedFriendRequest.getFullName()+" is added to your friends list", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, clickedFriendRequest.getFullName() + " is added to your friends request list", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "Update friend DB error ", Toast.LENGTH_LONG).show();
         }
@@ -206,7 +316,7 @@ public class LandingActivity extends BaseActivity {
     }
 
     private Boolean checkIfEmailPreExist(String emailAddress, List<FriendRequestData> friendsList) {
-        if(friendsList.size()>0) {
+        if (friendsList.size() > 0) {
             for (FriendRequestData friends : friendsList) {
                 if (friends.getEmailAddress().equals(emailAddress)) {
                     return true;
@@ -216,7 +326,7 @@ public class LandingActivity extends BaseActivity {
         return false;
     }
 
-    private List<FriendRequestData> removeDuplicates(List<FriendRequestData> clickedFriendRequestList){
+    private List<FriendRequestData> removeDuplicates(List<FriendRequestData> clickedFriendRequestList) {
         List<FriendRequestData> listWithDuplicates = clickedFriendRequestList;
         List<FriendRequestData> listWithoutDuplicates = new ArrayList<>(new HashSet<>(listWithDuplicates));
         return listWithoutDuplicates;
