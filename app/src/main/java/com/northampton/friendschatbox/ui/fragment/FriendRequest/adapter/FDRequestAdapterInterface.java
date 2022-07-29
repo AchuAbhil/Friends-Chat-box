@@ -7,7 +7,7 @@ public interface FDRequestAdapterInterface {
 
     void onItemClicked(FriendRequestData userDetails, String email);
 
-    void onDeleteCtaClicked(Integer id);
+    void onDeleteCtaClicked(FriendRequestData userDetails, String email);
 
     void setEditableText(Integer id, String name);
 }

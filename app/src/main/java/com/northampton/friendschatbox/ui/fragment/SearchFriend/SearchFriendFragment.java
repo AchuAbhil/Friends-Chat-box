@@ -5,6 +5,7 @@ import static com.northampton.friendschatbox.ui.fragment.SplashScreenFragment.SP
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,9 +34,11 @@ import java.util.List;
  */
 public class SearchFriendFragment extends BaseFragment implements AdapterInterface {
 
+    public static final String TAG = SearchFriendFragment.class.getName();
     List<UserDetails> userList = new ArrayList<>();
     List<FriendRequestData> friendRequestList = new ArrayList<>();
     UserDetails userDetails = new UserDetails();
+    FriendRequestData currentFriendRequestData = new FriendRequestData();
     private AdapterInterface adapterInterface;
     private FragmentSearchFriendBinding binding;
 
@@ -70,6 +73,9 @@ public class SearchFriendFragment extends BaseFragment implements AdapterInterfa
 
     private void findFriend() {
         userDetails = getAppPreferences().getUserInfo();
+        currentFriendRequestData.setRequestedAccepted(false);
+        currentFriendRequestData.setEmailAddress(userDetails.getEmailAddress());
+        currentFriendRequestData.setFullName(userDetails.getFullName());
         userList.clear();
         userList.addAll(((LandingActivity) requireActivity()).getUsersList());
         if (userList != null && !userList.isEmpty()) {
@@ -83,7 +89,7 @@ public class SearchFriendFragment extends BaseFragment implements AdapterInterfa
     }
 
     @Override
-    public void onItemClicked(UserDetails userDetails, String email) {
+    public void onItemClicked(UserDetails clickedUserDetails, String email) {
         friendRequestList.clear();
         if (getAppPreferences().getAllFriendRequest() != null) {
             friendRequestList = getAppPreferences().getAllFriendRequest();
@@ -92,11 +98,12 @@ public class SearchFriendFragment extends BaseFragment implements AdapterInterfa
         binding.rvUser.setEnabled(false);
         showProgressBar(true);
         FriendRequestData friendRequest = new FriendRequestData();
+        Log.d(TAG, "getEmailAddress: "+userDetails.getEmailAddress());
         handler.postDelayed(() -> {
-            friendRequest.setFullName(userDetails.getFullName());
-            friendRequest.setEmailAddress(userDetails.getEmailAddress());
+            friendRequest.setFullName(clickedUserDetails.getFullName());
+            friendRequest.setEmailAddress(clickedUserDetails.getEmailAddress());
             friendRequest.setRequestedAccepted(false);
-            ((LandingActivity) requireActivity()).friendsRequestDBUpdateCheck(userDetails.getEmailAddress(), friendRequest, userDetails.emailAddress);
+            ((LandingActivity) requireActivity()).friendsRequestDBUpdateCheck(friendRequest, currentFriendRequestData);
             showProgressBar(false);
             binding.rvUser.setEnabled(true);
         }, SPLASH_SCREEN_TIME_OUT);

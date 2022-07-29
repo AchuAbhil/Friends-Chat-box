@@ -14,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.northampton.friendschatbox.R;
 import com.northampton.friendschatbox.data.DataBaseUsersListHelper;
 import com.northampton.friendschatbox.data.models.FriendRequestData;
@@ -22,14 +23,18 @@ import com.northampton.friendschatbox.databinding.ActivityLandingBinding;
 import com.northampton.friendschatbox.ui.BaseActivity;
 import com.northampton.friendschatbox.utils.AppPreferences;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class LandingActivity extends BaseActivity {
 
+    public static final String TAG = LandingActivity.class.getName();
     private ActivityLandingBinding binding;
     private NavGraph navGraph;
     private NavController navController;
@@ -98,6 +103,10 @@ public class LandingActivity extends BaseActivity {
         return dataBaseUsersListHelper.updateUserFriendRequestList(emailAddress, friendRequestToString);
     }
 
+    public Boolean updateFriendsList(String emailAddress, String friendRequestToString){
+        return dataBaseUsersListHelper.updateRequestFriendList(emailAddress, friendRequestToString);
+    }
+
     public List<UserDetails> getUsersList() {
         List<UserDetails> userDetailsListMain = dataBaseUsersListHelper.getAllUsers(this);
         List<UserDetails> userDetailsList = new ArrayList<>();
@@ -113,36 +122,68 @@ public class LandingActivity extends BaseActivity {
         return userDetailsList;
     }
 
-    public void friendsRequestDBUpdateCheck(String emailAddress, FriendRequestData friendRequest, String CurrentUserEmailAddress) {
+    public List<FriendRequestData> getFriendRequestList(String emailAddress) {
+        List<UserDetails> userDetailsListMain = dataBaseUsersListHelper.getAllUsers(this);
+        List<FriendRequestData> friendRequestData;
+        UserDetails userDetails = new UserDetails();
+        if (userDetailsListMain != null) {
+            if (userDetailsListMain.size() > 0) {
+                for (UserDetails user : userDetailsListMain) {
+                    if (user.getEmailAddress().equals(emailAddress)) {
+                        userDetails = user;
+                    }
+                }
+            }
+        }
+        friendRequestData = convertToList(userDetails.getFriendsRequestList());
+        Log.d(TAG, "ClickedEmailAddress: "+userDetails.getFriendsRequestList());
+        return friendRequestData;
+    }
+
+    public void friendsRequestDBUpdateCheck(FriendRequestData clickedFriendRequest, FriendRequestData currentFriendRequest) {
         List<FriendRequestData> friendsList = new ArrayList<>();
-        List<FriendRequestData> friendRequestList = new ArrayList<>();
+        List<FriendRequestData> currentFriendRequestList = new ArrayList<>();
+        List<FriendRequestData> clickedFriendRequestList = getFriendRequestList(clickedFriendRequest.getEmailAddress());
         if (mAppPreferences.getAllFriends() != null) {
             friendsList = mAppPreferences.getAllFriends();
         }
         if (mAppPreferences.getAllFriendRequest() != null) {
-            friendRequestList = mAppPreferences.getAllFriendRequest();
+            currentFriendRequestList = mAppPreferences.getAllFriendRequest();
         }
         // if the logged in user has all ready been friends or not check is doing below
         if (friendsList.size() > 0) {
-            if(!checkIfEmailPreExist(CurrentUserEmailAddress, friendsList, "friendsList")) {
-                UpdateDB(emailAddress, friendRequest, friendRequestList);
+            //check if current friends request list contain clicked email
+            if(!checkIfEmailPreExist(clickedFriendRequest.getEmailAddress(), friendsList, "friendsList")) {
+                Log.d(TAG, "CurrentUserEmailAddress: "+currentFriendRequest.getEmailAddress());
+                UpdateDB(currentFriendRequest, clickedFriendRequest, currentFriendRequestList, clickedFriendRequestList);
             }
         } else {
-            if (friendRequestList.size() > 0) {
-                if(!checkIfEmailPreExist(CurrentUserEmailAddress, friendRequestList, "friendRequestList")) {
-                    UpdateDB(emailAddress, friendRequest, friendRequestList);
+            if (currentFriendRequestList.size() > 0) {
+                //check if current friends request list contain clicked email
+                if(!checkIfEmailPreExist(clickedFriendRequest.getEmailAddress(), currentFriendRequestList, "friendRequestList")) {
+                    Log.d(TAG, "CurrentUserEmailAddress: "+userDetails.getFriendsRequestList());
+                    UpdateDB(currentFriendRequest, clickedFriendRequest, currentFriendRequestList, clickedFriendRequestList);
                 }
             }else {
-                UpdateDB(CurrentUserEmailAddress, friendRequest, friendRequestList);
+                UpdateDB(currentFriendRequest, clickedFriendRequest, currentFriendRequestList, clickedFriendRequestList);
             }
         }
     }
 
-    private void UpdateDB(String emailAddress, FriendRequestData friendRequest, List<FriendRequestData> friendRequestList) {
-        friendRequestList.add(friendRequest);
-        if (updateDBFriendRequestList(emailAddress, getFriendsListToString(friendRequestList)).containsKey(true)) {
-            mAppPreferences.setAllFriendRequest(friendRequestList);
-            Toast.makeText(this, friendRequest.getFullName()+" is added to your friends list", Toast.LENGTH_LONG).show();
+    private void UpdateDB(FriendRequestData currentFriendRequest, FriendRequestData clickedFriendRequest, List<FriendRequestData> currentFriendRequestList, List<FriendRequestData> clickedFriendRequestList) {
+        currentFriendRequestList.add(clickedFriendRequest);
+        List<FriendRequestData> currentFriendRequestLists = removeDuplicates(currentFriendRequestList);
+        Log.d(TAG, "currentEmailAddress: "+currentFriendRequest.getEmailAddress()+" getFriendsListToString: "+getFriendsListToString(currentFriendRequestLists));
+        if (updateDBFriendRequestList(currentFriendRequest.getEmailAddress(), getFriendsListToString(currentFriendRequestLists)).containsKey(true)) {
+            mAppPreferences.setAllFriendRequest(currentFriendRequestList);
+            //check if clicked friends request list contain current email
+            if (!checkIfEmailPreExist(currentFriendRequest.getEmailAddress(),clickedFriendRequestList)){
+                clickedFriendRequestList.add(currentFriendRequest);
+                List<FriendRequestData> clickedFriendRequestsList = removeDuplicates(clickedFriendRequestList);
+                Log.d(TAG, "ClickedEmailAddress: "+clickedFriendRequest.getEmailAddress()+" getFriendsListToString: "+getFriendsListToString(clickedFriendRequestsList));
+                updateDBFriendRequestList(clickedFriendRequest.getEmailAddress(), getFriendsListToString(clickedFriendRequestsList));
+            }
+            Toast.makeText(this, clickedFriendRequest.getFullName()+" is added to your friends list", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "Update friend DB error ", Toast.LENGTH_LONG).show();
         }
@@ -150,9 +191,9 @@ public class LandingActivity extends BaseActivity {
 
     private Boolean checkIfEmailPreExist(String emailAddress, List<FriendRequestData> friendsList, String list) {
         String toastMsg = "";
-        if(list.equals("friendsList")){
+        if (list.equals("friendsList")) {
             toastMsg = " is all ready added to the user list.";
-        }else {
+        } else {
             toastMsg = " is all ready added to the friend request list.";
         }
         for (FriendRequestData friends : friendsList) {
@@ -164,8 +205,39 @@ public class LandingActivity extends BaseActivity {
         return false;
     }
 
+    private Boolean checkIfEmailPreExist(String emailAddress, List<FriendRequestData> friendsList) {
+        if(friendsList.size()>0) {
+            for (FriendRequestData friends : friendsList) {
+                if (friends.getEmailAddress().equals(emailAddress)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private List<FriendRequestData> removeDuplicates(List<FriendRequestData> clickedFriendRequestList){
+        List<FriendRequestData> listWithDuplicates = clickedFriendRequestList;
+        List<FriendRequestData> listWithoutDuplicates = new ArrayList<>(new HashSet<>(listWithDuplicates));
+        return listWithoutDuplicates;
+    }
+
     private String getFriendsListToString(List<FriendRequestData> friendRequestList) {
         Gson gson = new Gson();
         return gson.toJson(friendRequestList);
+    }
+
+    private List<FriendRequestData> convertToList(String json) {
+        List<FriendRequestData> temp;
+        Gson gson = new Gson();
+
+        if (json.isEmpty()) {
+            temp = new ArrayList<>();
+        } else {
+            Type type = new TypeToken<List<FriendRequestData>>() {
+            }.getType();
+            temp = gson.fromJson(json, type);
+        }
+        return temp;
     }
 }

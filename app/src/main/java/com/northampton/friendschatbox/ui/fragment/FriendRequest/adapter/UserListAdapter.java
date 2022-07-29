@@ -1,6 +1,7 @@
 package com.northampton.friendschatbox.ui.fragment.FriendRequest.adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -40,6 +41,12 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.holder
             holder.itemBinding.imgChecked.setEnabled(true);
         });
 
+        holder.itemBinding.imgDelete.setOnClickListener(v -> {
+            holder.itemBinding.imgDelete.setEnabled(false);
+            buttonListener.onDeleteCtaClicked(contact, contact.getEmailAddress());
+            holder.itemBinding.imgDelete.setEnabled(true);
+        });
+
     }
 
 
@@ -54,6 +61,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.holder
         public holder(ViewListUserViewBinding itemBinding) {
             super(itemBinding.getRoot());
             this.itemBinding = itemBinding;
+            itemBinding.imgDelete.setVisibility(View.VISIBLE);
         }
     }
 }

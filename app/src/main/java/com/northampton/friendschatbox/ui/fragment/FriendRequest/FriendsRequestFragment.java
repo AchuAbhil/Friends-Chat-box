@@ -83,7 +83,7 @@ public class FriendsRequestFragment extends BaseFragment implements FDRequestAda
     }
 
     @Override
-    public void onDeleteCtaClicked(Integer id) {
+    public void onDeleteCtaClicked(FriendRequestData userDetails, String email) {
 
     }
 
