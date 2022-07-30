@@ -94,7 +94,7 @@ public class LandingActivity extends BaseActivity {
         navEmail.setText(userDetails.getEmailAddress());
     }
 
-    public Boolean updateDBUserDetails(String originalName, UserDetails userDetails) {
+    public Boolean updateProfileDBUserDetails(String originalName, UserDetails userDetails) {
         return dataBaseUsersListHelper.updateUser(originalName, userDetails);
     }
 
@@ -212,6 +212,21 @@ public class LandingActivity extends BaseActivity {
             }
         }
         return userDetailsList;
+    }
+
+    public List<FriendRequestData> removeNullInFriendRequestList(List<FriendRequestData> currentList) {
+        List<FriendRequestData> friendRequestListMain = currentList;
+        List<FriendRequestData> friendRequestList = new ArrayList<>();
+        if (friendRequestListMain != null) {
+            if (friendRequestListMain.size() > 0) {
+                for (FriendRequestData user : friendRequestListMain) {
+                    if (user.getFullName() != null) {
+                        friendRequestList.add(user);
+                    }
+                }
+            }
+        }
+        return friendRequestList;
     }
 
     public List<FriendRequestData> getFriendRequestList(String emailAddress) {
@@ -337,7 +352,7 @@ public class LandingActivity extends BaseActivity {
         return gson.toJson(friendRequestList);
     }
 
-    private List<FriendRequestData> convertToList(String json) {
+    public List<FriendRequestData> convertToList(String json) {
         List<FriendRequestData> temp;
         Gson gson = new Gson();
 

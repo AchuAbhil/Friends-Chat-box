@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -25,9 +26,9 @@ public class DataBaseUsersListHelper extends SQLiteOpenHelper {
     public static final String COLUMN_DATE_UPDATED = "COLUMN_DATE_UPDATED";
     public static final String COLUMN_PASSWORD = "COLUMN_PASSWORD";
     public static final String COLUMN_HOBBIES = "COLUMN_HOBBIES";
-    public static final String COLUMN_SEX = "COLUMN_SEX";
     public static final String COLUMN_FRIENDS_LIST = "COLUMN_FRIENDS_LIST";
     public static final String COLUMN_FRIENDS_REQUEST_LIST = "COLUMN_FRIENDS_REQUEST_LIST";
+    public static final String TAG = DataBaseUsersListHelper.class.getName();
 
     public DataBaseUsersListHelper(@Nullable Context context) {
         super(context, "user.db", null, 1);
@@ -43,9 +44,8 @@ public class DataBaseUsersListHelper extends SQLiteOpenHelper {
                 COLUMN_DATE_UPDATED + " TEXT, " +
                 COLUMN_PASSWORD + " TEXT, " +
                 COLUMN_HOBBIES + " TEXT, " +
-                COLUMN_SEX + " TEXT, " +
                 COLUMN_FRIENDS_LIST + " TEXT, " +
-                COLUMN_FRIENDS_REQUEST_LIST + " TEXT" +
+                COLUMN_FRIENDS_REQUEST_LIST + " TEXT " +
                 ")";
 
         sqLiteDatabase.execSQL(createTableStatement);
@@ -62,9 +62,6 @@ public class DataBaseUsersListHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_DATE_UPDATED, userDetails.dateUpdated);
         contentValues.put(COLUMN_PASSWORD, userDetails.password);
         contentValues.put(COLUMN_HOBBIES, userDetails.hobbies);
-        contentValues.put(COLUMN_SEX, userDetails.sex);
-        contentValues.put(COLUMN_FRIENDS_LIST, userDetails.getFriendsList());
-        contentValues.put(COLUMN_FRIENDS_REQUEST_LIST, userDetails.getFriendsRequestList());
 
 
         long insert = sqLiteDatabase.insert(ALL_USERS_TABLE, null, contentValues);
@@ -91,9 +88,16 @@ public class DataBaseUsersListHelper extends SQLiteOpenHelper {
                 String dateUpdated = cursor.getString(4);
                 String password = cursor.getString(5);
                 String hobbies = cursor.getString(6);
-                String sex = cursor.getString(7);
-                String friendsList = cursor.getString(8);
-                String friendsRequestList = cursor.getString(9);
+                String friendsList = cursor.getString(7);
+                String friendsRequestList = cursor.getString(8);
+                Log.d(TAG, "getAllUsers: fullName: " + fullName);
+                Log.d(TAG, "getAllUsers: emailAddress: " + emailAddress);
+                Log.d(TAG, "getAllUsers: dateRegistered: " + dateRegistered);
+                Log.d(TAG, "getAllUsers: dateUpdated: " + dateUpdated);
+                Log.d(TAG, "getAllUsers: password: " + password);
+                Log.d(TAG, "getAllUsers: hobbies: " + hobbies);
+                Log.d(TAG, "getAllUsers: friendsList: " + friendsList);
+                Log.d(TAG, "getAllUsers: friendsRequestList: " + friendsRequestList);
 
                 UserDetails userDetails = new UserDetails(
                         userID,
@@ -103,7 +107,6 @@ public class DataBaseUsersListHelper extends SQLiteOpenHelper {
                         dateUpdated,
                         password,
                         hobbies,
-                        sex,
                         friendsList,
                         friendsRequestList
                 );
@@ -134,7 +137,6 @@ public class DataBaseUsersListHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_DATE_UPDATED, userDetails.dateUpdated);
         contentValues.put(COLUMN_PASSWORD, userDetails.password);
         contentValues.put(COLUMN_HOBBIES, userDetails.hobbies);
-        contentValues.put(COLUMN_SEX, userDetails.sex);
 
         // on below line we are calling a update method to update our database and passing our values.
         // and we are comparing it with name of our course which is stored in original name variable.
