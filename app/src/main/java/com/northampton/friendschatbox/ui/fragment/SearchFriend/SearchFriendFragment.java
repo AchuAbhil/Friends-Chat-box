@@ -63,6 +63,10 @@ public class SearchFriendFragment extends BaseFragment implements AdapterInterfa
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         adapterInterface = this;
+        userDetails = getAppPreferences().getUserInfo();
+        currentFriendRequestData.setRequestedAccepted(false);
+        currentFriendRequestData.setEmailAddress(userDetails.getEmailAddress());
+        currentFriendRequestData.setFullName(userDetails.getFullName());
         findFriend();
     }
 
@@ -72,10 +76,6 @@ public class SearchFriendFragment extends BaseFragment implements AdapterInterfa
     }
 
     private void findFriend() {
-        userDetails = getAppPreferences().getUserInfo();
-        currentFriendRequestData.setRequestedAccepted(false);
-        currentFriendRequestData.setEmailAddress(userDetails.getEmailAddress());
-        currentFriendRequestData.setFullName(userDetails.getFullName());
         userList.clear();
         userList.addAll(((LandingActivity) requireActivity()).getUsersList());
         if (userList != null && !userList.isEmpty()) {

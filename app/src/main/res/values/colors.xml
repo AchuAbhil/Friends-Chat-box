@@ -77,4 +77,8 @@
     //ToolBar Color
     <color name="toolbar_color">#2F156A</color>
 
+
+    <color name="hyperion_cool_gray_100">#E6EDEF</color>
+    <color name="bg_gradient_color">#232E86</color>
+
 </resources>

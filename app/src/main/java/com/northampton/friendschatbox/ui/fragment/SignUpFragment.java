@@ -51,7 +51,6 @@ public class SignUpFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         userDetails = new UserDetails();
         getTextChangeListener();
-        getDateTime();
         userDetails.setDateRegistered(getDateTime());
         userDetails.setDateUpdated(getDateTime());
         userDetails.setFriendsList("");

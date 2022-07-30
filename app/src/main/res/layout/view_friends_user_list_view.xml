@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/dimens4"
+    android:layout_marginTop="@dimen/_04"
+    android:layout_marginRight="@dimen/dimens4"
+    android:layout_marginBottom="@dimen/_04"
+    app:cardCornerRadius="@dimen/_08"
+    tools:context=".ui.fragment.FriendRequest.adapter.UserFriendsListAdapter">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_gradient_color">
+
+        <View
+            android:id="@+id/parkBannerDividerTop"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens1"
+            android:background="@color/hyperion_cool_gray_100"
+            android:importantForAccessibility="no"
+            android:visibility="invisible"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivGeniePlus"
+            android:layout_width="@dimen/_80"
+            android:layout_height="@dimen/_80"
+            android:layout_marginStart="@dimen/_16"
+            android:layout_marginTop="@dimen/_12"
+            android:layout_marginEnd="@dimen/_16"
+            android:layout_marginBottom="@dimen/_12"
+            android:src="@drawable/image1"
+            app:civ_border_color="@color/photoBackground"
+            app:civ_border_width="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/tvFDName"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvFDName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
+            android:textColor="@color/white"
+            android:layout_marginBottom="@dimen/_08"
+            app:layout_constraintBottom_toTopOf="@+id/tvBuddyTime"
+            app:layout_constraintLeft_toRightOf="@+id/ivGeniePlus"
+            app:layout_constraintRight_toLeftOf="@+id/tvDropDownIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="When you can book:" />
+
+        <TextView
+            android:id="@+id/tvBuddyTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
+            android:textColor="@color/white"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/tvFDName"
+            app:layout_constraintStart_toStartOf="@+id/tvFDName"
+            app:layout_constraintTop_toBottomOf="@+id/tvFDName"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="5:00 PM" />
+
+        <TextView
+            android:id="@+id/tvDropDownIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimens1"
+            android:layout_marginEnd="@dimen/_16"
+            android:gravity="center_vertical"
+            android:importantForAccessibility="no"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/tvFDName"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

@@ -106,7 +106,7 @@ public class LandingActivity extends BaseActivity {
         return dataBaseUsersListHelper.updateUserFriendList(emailAddress, friendRequestToString);
     }
 
-    public void friendsListDBUpdateCheck(FriendRequestData clickedFriendData, FriendRequestData currentFriendData) {
+    public void friendsListDBUpdateCheck(FriendRequestData clickedFriendData, FriendRequestData currentFriendData, Boolean isDeleteFriendsItem) {
         List<FriendRequestData> currentFriendsList = new ArrayList<>();
         List<FriendRequestData> clickedFriendsList = getFriendList(clickedFriendData.getEmailAddress());
         List<FriendRequestData> currentFriendRequestList = new ArrayList<>();
@@ -118,17 +118,25 @@ public class LandingActivity extends BaseActivity {
             currentFriendRequestList = mAppPreferences.getAllFriendRequest();
         }
         // if the logged in user has all ready been friends or not check is doing below
-        if (currentFriendsList.size() > 0) {
-            //check if current friends list contain clicked email
-            if (!checkIfEmailPreExist(clickedFriendData.getEmailAddress(), currentFriendsList, "friendsList")) {
-                Log.d(TAG, "friendsListDBUpdateCheck CurrentUserEmailAddress: " + currentFriendData.getEmailAddress());
-                UpdateFDListDB(currentFriendData, clickedFriendData, currentFriendsList, clickedFriendsList, currentFriendRequestList, clickedFriendRequestList);
+        if (!isDeleteFriendsItem) {
+            if (currentFriendsList.size() > 0) {
+                //check if current friends list contain clicked email
+                if (!checkIfEmailPreExist(clickedFriendData.getEmailAddress(), currentFriendsList, "friendsList")) {
+                    Log.d(TAG, "friendsListDBUpdateCheck CurrentUserEmailAddress: " + currentFriendData.getEmailAddress());
+                    UpdateFDListDB(currentFriendData, clickedFriendData, currentFriendsList, clickedFriendsList, currentFriendRequestList, clickedFriendRequestList);
+                } else {
+                    deleteFDRQListDB(currentFriendData, clickedFriendData, currentFriendRequestList, clickedFriendRequestList);
+                }
             } else {
-                deleteFDRQListDB(currentFriendData, clickedFriendData, currentFriendRequestList, clickedFriendRequestList);
+                UpdateFDListDB(currentFriendData, clickedFriendData, currentFriendsList, clickedFriendsList, currentFriendRequestList, clickedFriendRequestList);
             }
         } else {
-            UpdateFDListDB(currentFriendData, clickedFriendData, currentFriendsList, clickedFriendsList, currentFriendRequestList, clickedFriendRequestList);
+            deleteFDRQListDB(currentFriendData, clickedFriendData, currentFriendRequestList, clickedFriendRequestList);
         }
+    }
+
+    private void initFriendsListForDB() {
+
     }
 
     private void UpdateFDListDB(
@@ -158,7 +166,7 @@ public class LandingActivity extends BaseActivity {
         }
     }
 
-    private void deleteFDRQListDB(FriendRequestData currentFriendRequest, FriendRequestData clickedFriendRequest, List<FriendRequestData> currentFriendRequestList, List<FriendRequestData> clickedFriendRequestList) {
+    public void deleteFDRQListDB(FriendRequestData currentFriendRequest, FriendRequestData clickedFriendRequest, List<FriendRequestData> currentFriendRequestList, List<FriendRequestData> clickedFriendRequestList) {
         if (currentFriendRequestList.size() > 0) {
             currentFriendRequestList = removeItem(currentFriendRequestList, clickedFriendRequest);
         }
@@ -214,7 +222,7 @@ public class LandingActivity extends BaseActivity {
         return userDetailsList;
     }
 
-    public List<FriendRequestData> removeNullInFriendRequestList(List<FriendRequestData> currentList) {
+    public List<FriendRequestData> removeNullInList(List<FriendRequestData> currentList) {
         List<FriendRequestData> friendRequestListMain = currentList;
         List<FriendRequestData> friendRequestList = new ArrayList<>();
         if (friendRequestListMain != null) {
@@ -322,9 +330,11 @@ public class LandingActivity extends BaseActivity {
             toastMsg = " is all ready added to the friend request list.";
         }
         for (FriendRequestData friends : friendsList) {
-            if (friends.getEmailAddress().equals(emailAddress)) {
-                Toast.makeText(this, friends.getFullName() + toastMsg, Toast.LENGTH_LONG).show();
-                return true;
+            if(friends.getEmailAddress()!=null) {
+                if (friends.getEmailAddress().equals(emailAddress)) {
+                    Toast.makeText(this, friends.getFullName() + toastMsg, Toast.LENGTH_LONG).show();
+                    return true;
+                }
             }
         }
         return false;
@@ -355,13 +365,15 @@ public class LandingActivity extends BaseActivity {
     public List<FriendRequestData> convertToList(String json) {
         List<FriendRequestData> temp;
         Gson gson = new Gson();
-
-        if (json.isEmpty()) {
-            temp = new ArrayList<>();
-        } else {
-            Type type = new TypeToken<List<FriendRequestData>>() {
-            }.getType();
-            temp = gson.fromJson(json, type);
+        temp = new ArrayList<>();
+        if (json != null) {
+            if (!json.isEmpty()) {
+                temp = new ArrayList<>();
+            } else {
+                Type type = new TypeToken<List<FriendRequestData>>() {
+                }.getType();
+                temp = gson.fromJson(json, type);
+            }
         }
         return temp;
     }

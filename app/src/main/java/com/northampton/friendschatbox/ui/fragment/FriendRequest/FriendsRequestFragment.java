@@ -26,9 +26,7 @@ import com.northampton.friendschatbox.ui.fragment.FriendRequest.adapter.FDReques
 import com.northampton.friendschatbox.ui.fragment.FriendRequest.adapter.UserListAdapter;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,7 +65,6 @@ public class FriendsRequestFragment extends BaseFragment implements FDRequestAda
         currentFriendRequestData.setRequestedAccepted(false);
         currentFriendRequestData.setEmailAddress(userDetails.getEmailAddress());
         currentFriendRequestData.setFullName(userDetails.getFullName());
-        userDetails = getAppPreferences().getUserInfo();
         findFriendRequest();
     }
 
@@ -79,7 +76,7 @@ public class FriendsRequestFragment extends BaseFragment implements FDRequestAda
     private void findFriendRequest() {
         friendRequestList.clear();
         friendRequestList.addAll(getAppPreferences().getAllFriendRequest());
-        friendRequestList = ((LandingActivity) requireActivity()).removeNullInFriendRequestList(friendRequestList);
+        friendRequestList = ((LandingActivity) requireActivity()).removeNullInList(friendRequestList);
         if (friendRequestList != null && !friendRequestList.isEmpty()) {
             binding.rvUser.setVisibility(View.VISIBLE);
             binding.tvNoDBMessage.setVisibility(View.GONE);
@@ -100,12 +97,13 @@ public class FriendsRequestFragment extends BaseFragment implements FDRequestAda
         binding.rvUser.setEnabled(false);
         showProgressBar(true);
         FriendRequestData friendRequest = new FriendRequestData();
-        Log.d(TAG, "getEmailAddress: "+userDetails.getEmailAddress());
+        Log.d(TAG, "getEmailAddress: " + userDetails.getEmailAddress());
         handler.postDelayed(() -> {
             friendRequest.setFullName(clickedUserDetails.getFullName());
             friendRequest.setEmailAddress(clickedUserDetails.getEmailAddress());
+            friendRequest.setDateBecomeBuddy(getDateTime());
             friendRequest.setRequestedAccepted(false);
-            ((LandingActivity) requireActivity()).friendsListDBUpdateCheck(friendRequest, currentFriendRequestData);
+            ((LandingActivity) requireActivity()).friendsListDBUpdateCheck(friendRequest, currentFriendRequestData, false);
             showProgressBar(false);
             binding.rvUser.setEnabled(true);
             findFriendRequest();
@@ -113,8 +111,25 @@ public class FriendsRequestFragment extends BaseFragment implements FDRequestAda
     }
 
     @Override
-    public void onDeleteCtaClicked(FriendRequestData userDetails, String email) {
-
+    public void onDeleteCtaClicked(FriendRequestData clickedUserDetails, String email) {
+        friendRequestList.clear();
+        if (getAppPreferences().getAllFriendRequest() != null) {
+            friendRequestList = getAppPreferences().getAllFriendRequest();
+        }
+        Handler handler = new Handler();
+        binding.rvUser.setEnabled(false);
+        showProgressBar(true);
+        FriendRequestData friendRequest = new FriendRequestData();
+        Log.d(TAG, "getEmailAddress: " + userDetails.getEmailAddress());
+        handler.postDelayed(() -> {
+            friendRequest.setFullName(clickedUserDetails.getFullName());
+            friendRequest.setEmailAddress(clickedUserDetails.getEmailAddress());
+            friendRequest.setRequestedAccepted(false);
+            ((LandingActivity) requireActivity()).friendsListDBUpdateCheck(friendRequest, currentFriendRequestData, true);
+            showProgressBar(false);
+            binding.rvUser.setEnabled(true);
+            findFriendRequest();
+        }, SPLASH_SCREEN_TIME_OUT);
     }
 
     @Override
