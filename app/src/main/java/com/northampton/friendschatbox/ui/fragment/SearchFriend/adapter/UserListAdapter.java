@@ -33,15 +33,12 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.holder
         final UserDetails contact = items.get(position);
         holder.itemBinding.tvTitle.setText(contact.getFullName());
 
-
         holder.itemBinding.imgChecked.setOnClickListener(v -> {
             holder.itemBinding.imgChecked.setEnabled(false);
             buttonListener.onItemClicked(contact, contact.getEmailAddress());
             holder.itemBinding.imgChecked.setEnabled(true);
         });
-
     }
-
 
     @Override
     public int getItemCount() {

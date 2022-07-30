@@ -135,10 +135,6 @@ public class LandingActivity extends BaseActivity {
         }
     }
 
-    private void initFriendsListForDB() {
-
-    }
-
     private void UpdateFDListDB(
             FriendRequestData currentFriendData,
             FriendRequestData clickedFriendData,
@@ -341,10 +337,12 @@ public class LandingActivity extends BaseActivity {
     }
 
     private Boolean checkIfEmailPreExist(String emailAddress, List<FriendRequestData> friendsList) {
-        if (friendsList.size() > 0) {
-            for (FriendRequestData friends : friendsList) {
-                if (friends.getEmailAddress().equals(emailAddress)) {
-                    return true;
+        if(friendsList!=null) {
+            if (friendsList.size() > 0) {
+                for (FriendRequestData friends : friendsList) {
+                    if (friends.getEmailAddress().equals(emailAddress)) {
+                        return true;
+                    }
                 }
             }
         }

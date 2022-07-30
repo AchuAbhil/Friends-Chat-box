@@ -10,7 +10,6 @@ import com.northampton.friendschatbox.data.models.UserDetails;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -66,18 +65,20 @@ public class AppPreferences {
         List<FriendRequestData> temp;
         Gson gson = new Gson();
         String content = mPref.getString("FriendList", "");
-
-        if (content.isEmpty()) {
-            temp = new ArrayList<>();
-        } else {
-            Type type = new TypeToken<List<FriendRequestData>>() {
-            }.getType();
-            temp = gson.fromJson(content, type);
+        temp = new ArrayList<>();
+        if (content != null) {
+            if (content.isEmpty()) {
+                temp = new ArrayList<>();
+            } else {
+                Type type = new TypeToken<List<FriendRequestData>>() {
+                }.getType();
+                temp = gson.fromJson(content, type);
+            }
         }
         return temp;
     }
 
-    public void setAllFriends(List<FriendRequestData> list){
+    public void setAllFriends(List<FriendRequestData> list) {
         SharedPreferences.Editor editor = mPref.edit();
         Gson gson = new Gson();
         String json = gson.toJson(list);
@@ -85,7 +86,7 @@ public class AppPreferences {
         editor.apply();
     }
 
-    public void addFriend(FriendRequestData friendRequestData){
+    public void addFriend(FriendRequestData friendRequestData) {
         List<FriendRequestData> temp = getAllFriends();
         SharedPreferences.Editor editor = mPref.edit();
         temp.add(friendRequestData);
@@ -98,15 +99,25 @@ public class AppPreferences {
         List<FriendRequestData> temp;
         Gson gson = new Gson();
         String content = mPref.getString("FriendRequestList", "");
-
-        if (content.isEmpty()) {
-            temp = new ArrayList<>();
-        } else {
-            Type type = new TypeToken<List<FriendRequestData>>() {
-            }.getType();
-            temp = gson.fromJson(content, type);
+        temp = new ArrayList<>();
+        if (content != null) {
+            if (content.isEmpty()) {
+                temp = new ArrayList<>();
+            } else {
+                Type type = new TypeToken<List<FriendRequestData>>() {
+                }.getType();
+                temp = gson.fromJson(content, type);
+            }
         }
         return temp;
+    }
+
+    public void setAllFriendRequest(List<FriendRequestData> list) {
+        SharedPreferences.Editor editor = mPref.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        editor.putString("FriendRequestList", json);
+        editor.apply();
     }
 
     public List<FriendRequestData> convertToList(String json) {
@@ -123,15 +134,7 @@ public class AppPreferences {
         return temp;
     }
 
-    public void setAllFriendRequest(List<FriendRequestData> list){
-        SharedPreferences.Editor editor = mPref.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(list);
-        editor.putString("FriendRequestList", json);
-        editor.apply();
-    }
-
-    public void addFriendRequest(FriendRequestData friendRequestData){
+    public void addFriendRequest(FriendRequestData friendRequestData) {
         List<FriendRequestData> temp = getAllFriends();
         SharedPreferences.Editor editor = mPref.edit();
         temp.add(friendRequestData);
@@ -140,11 +143,11 @@ public class AppPreferences {
         editor.putString("FriendRequestList", jsonString).apply();
     }
 
-    public String getFriendRequestToString(){
+    public String getFriendRequestToString() {
         return mPref.getString("FriendRequestList", "");
     }
 
-    public String getFriendsToString(){
+    public String getFriendsToString() {
         return mPref.getString("FriendList", "");
     }
 

@@ -136,13 +136,15 @@ public class SignInFragment extends BaseFragment {
     public List<FriendRequestData> convertToList(String json) {
         List<FriendRequestData> temp;
         Gson gson = new Gson();
-
-        if (json.isEmpty()) {
-            temp = new ArrayList<>();
-        } else {
-            Type type = new TypeToken<List<FriendRequestData>>() {
-            }.getType();
-            temp = gson.fromJson(json, type);
+        temp = new ArrayList<>();
+        if (json != null) {
+            if (!json.isEmpty()) {
+                temp = new ArrayList<>();
+            } else {
+                Type type = new TypeToken<List<FriendRequestData>>() {
+                }.getType();
+                temp = gson.fromJson(json, type);
+            }
         }
         return temp;
     }

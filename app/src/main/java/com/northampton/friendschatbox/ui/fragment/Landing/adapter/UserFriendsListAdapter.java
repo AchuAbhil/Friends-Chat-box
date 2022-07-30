@@ -33,7 +33,6 @@ public class UserFriendsListAdapter extends RecyclerView.Adapter<UserFriendsList
         holder.itemBinding.tvBuddyTime.setText(contact.getDateBecomeBuddy());
     }
 
-
     @Override
     public int getItemCount() {
         return items == null ? 0 : items.size();
