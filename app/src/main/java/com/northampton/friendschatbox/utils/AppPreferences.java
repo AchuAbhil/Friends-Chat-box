@@ -52,27 +52,12 @@ public class AppPreferences {
         SharedPreferences.Editor editor = mPref.edit();
         Gson gson = new Gson();
         String jsonString = gson.toJson(userDetails);
-        //UserDetails user1 = gson.fromJson(jsonString,UserDetails.class);
         if (jsonString != null) {
             editor.putString("UserDetails", jsonString);
             editor.commit();
         }
 
         editor.apply();
-    }
-
-    public List<FriendRequestData> convertToList(String json) {
-        List<FriendRequestData> temp;
-        Gson gson = new Gson();
-
-        if (json.isEmpty()) {
-            temp = new ArrayList<>();
-        } else {
-            Type type = new TypeToken<List<FriendRequestData>>() {
-            }.getType();
-            temp = gson.fromJson(json, type);
-        }
-        return temp;
     }
 
     public void clear() {
