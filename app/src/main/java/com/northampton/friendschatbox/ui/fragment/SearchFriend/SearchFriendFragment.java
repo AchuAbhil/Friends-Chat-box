@@ -36,7 +36,7 @@ public class SearchFriendFragment extends BaseFragment implements AdapterInterfa
 
     public static final String TAG = SearchFriendFragment.class.getName();
     List<UserDetails> userList = new ArrayList<>();
-    List<FriendRequestData> friendRequestList = new ArrayList<>();
+    List<FriendRequestData> friendList = new ArrayList<>();
     UserDetails userDetails = new UserDetails();
     FriendRequestData currentFriendRequestData = new FriendRequestData();
     private AdapterInterface adapterInterface;
@@ -90,9 +90,11 @@ public class SearchFriendFragment extends BaseFragment implements AdapterInterfa
 
     @Override
     public void onItemClicked(UserDetails clickedUserDetails, String email) {
-        friendRequestList.clear();
+        friendList.clear();
         if (getAppPreferences().getAllFriendRequest() != null) {
-            friendRequestList = getAppPreferences().getAllFriendRequest();
+            friendList = getAppPreferences().getAllFriends();
+            friendList = ((LandingActivity) requireActivity()).removeNullInList(friendList);
+            friendList = ((LandingActivity) requireActivity()).removeDuplicates(friendList);
         }
         Handler handler = new Handler();
         binding.rvUser.setEnabled(false);

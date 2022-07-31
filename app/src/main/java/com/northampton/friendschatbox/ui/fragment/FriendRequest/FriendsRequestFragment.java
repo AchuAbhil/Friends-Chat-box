@@ -77,6 +77,7 @@ public class FriendsRequestFragment extends BaseFragment implements FDRequestAda
         friendRequestList.clear();
         friendRequestList.addAll(getAppPreferences().getAllFriendRequest());
         friendRequestList = ((LandingActivity) requireActivity()).removeNullInList(friendRequestList);
+        friendRequestList = ((LandingActivity) requireActivity()).removeDuplicates(friendRequestList);
         if (friendRequestList != null && !friendRequestList.isEmpty()) {
             binding.rvUser.setVisibility(View.VISIBLE);
             binding.tvNoDBMessage.setVisibility(View.GONE);

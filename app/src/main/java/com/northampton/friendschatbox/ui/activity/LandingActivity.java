@@ -349,7 +349,7 @@ public class LandingActivity extends BaseActivity {
         return false;
     }
 
-    private List<FriendRequestData> removeDuplicates(List<FriendRequestData> clickedFriendRequestList) {
+    public List<FriendRequestData> removeDuplicates(List<FriendRequestData> clickedFriendRequestList) {
         List<FriendRequestData> listWithDuplicates = clickedFriendRequestList;
         List<FriendRequestData> listWithoutDuplicates = new ArrayList<>(new HashSet<>(listWithDuplicates));
         return listWithoutDuplicates;
