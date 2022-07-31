@@ -111,11 +111,12 @@ public class LandingActivity extends BaseActivity {
         List<FriendRequestData> clickedFriendsList = getFriendList(clickedFriendData.getEmailAddress());
         List<FriendRequestData> currentFriendRequestList = new ArrayList<>();
         List<FriendRequestData> clickedFriendRequestList = getFriendRequestList(clickedFriendData.getEmailAddress());
-        if (mAppPreferences.getAllFriends() != null) {
-            currentFriendsList = mAppPreferences.getAllFriends();
+        UserDetails userDetails = mAppPreferences.getUserInfo();
+        if (userDetails.getFriends() != null) {
+            currentFriendsList = userDetails.getFriends();
         }
-        if (mAppPreferences.getAllFriendRequest() != null) {
-            currentFriendRequestList = mAppPreferences.getAllFriendRequest();
+        if (userDetails.getFriendsRequest() != null) {
+            currentFriendRequestList = userDetails.getFriendsRequest();
         }
         // if the logged in user has all ready been friends or not check is doing below
         if (!isDeleteFriendsItem) {
@@ -147,7 +148,9 @@ public class LandingActivity extends BaseActivity {
         List<FriendRequestData> currentFriendLists = removeDuplicates(currentFriendsList);
         Log.d(TAG, "UpdateFDListDB currentEmailAddress: " + currentFriendData.getEmailAddress() + " getFriendsListToString: " + getFriendsListToString(currentFriendLists));
         if (updateDBFriendList(currentFriendData.getEmailAddress(), getFriendsListToString(currentFriendLists)).containsKey(true)) {
-            mAppPreferences.setAllFriends(currentFriendLists);
+            UserDetails userDetails = mAppPreferences.getUserInfo();
+            userDetails.setFriendsRequestList(getFriendsListToString(currentFriendRequestList));
+            mAppPreferences.setUserInfo(userDetails);
             //check if clicked friends list contain current email
             if (!checkIfEmailPreExist(currentFriendData.getEmailAddress(), clickedFriendsList)) {
                 clickedFriendsList.add(currentFriendData);
@@ -169,7 +172,9 @@ public class LandingActivity extends BaseActivity {
         List<FriendRequestData> currentFriendRequestLists = removeDuplicates(currentFriendRequestList);
         Log.d(TAG, "deleteFDRQListDB currentEmailAddress: " + currentFriendRequest.getEmailAddress() + " getFriendsListToString: " + getFriendsListToString(currentFriendRequestLists));
         if (updateDBFriendRequestList(currentFriendRequest.getEmailAddress(), getFriendsListToString(currentFriendRequestLists)).containsKey(true)) {
-            mAppPreferences.setAllFriendRequest(currentFriendRequestList);
+            UserDetails userDetails = mAppPreferences.getUserInfo();
+            userDetails.setFriendsRequestList(getFriendsListToString(currentFriendRequestList));
+            mAppPreferences.setUserInfo(userDetails);
             //check if clicked friends request list contain current email
             if (checkIfEmailPreExist(currentFriendRequest.getEmailAddress(), clickedFriendRequestList)) {
                 if (clickedFriendRequestList.size() > 0) {
@@ -273,11 +278,12 @@ public class LandingActivity extends BaseActivity {
         List<FriendRequestData> friendsList = new ArrayList<>();
         List<FriendRequestData> currentFriendRequestList = new ArrayList<>();
         List<FriendRequestData> clickedFriendRequestList = getFriendRequestList(clickedFriendRequest.getEmailAddress());
-        if (mAppPreferences.getAllFriends() != null) {
-            friendsList = mAppPreferences.getAllFriends();
+        UserDetails userDetails = mAppPreferences.getUserInfo();
+        if (userDetails.getFriends() != null) {
+            friendsList = userDetails.getFriends();
         }
-        if (mAppPreferences.getAllFriendRequest() != null) {
-            currentFriendRequestList = mAppPreferences.getAllFriendRequest();
+        if (userDetails.getFriendsRequest() != null) {
+            currentFriendRequestList = userDetails.getFriendsRequest();
         }
         // if the logged in user has all ready been friends or not check is doing below
         if (friendsList.size() > 0) {
@@ -304,7 +310,9 @@ public class LandingActivity extends BaseActivity {
         List<FriendRequestData> currentFriendRequestLists = removeDuplicates(currentFriendRequestList);
         Log.d(TAG, "currentEmailAddress: " + currentFriendRequest.getEmailAddress() + " getFriendsListToString: " + getFriendsListToString(currentFriendRequestLists));
         if (updateDBFriendRequestList(currentFriendRequest.getEmailAddress(), getFriendsListToString(currentFriendRequestLists)).containsKey(true)) {
-            mAppPreferences.setAllFriendRequest(currentFriendRequestList);
+            UserDetails userDetails = mAppPreferences.getUserInfo();
+            userDetails.setFriendsRequestList(getFriendsListToString(currentFriendRequestList));
+            mAppPreferences.setUserInfo(userDetails);
             //check if clicked friends request list contain current email
             if (!checkIfEmailPreExist(currentFriendRequest.getEmailAddress(), clickedFriendRequestList)) {
                 clickedFriendRequestList.add(currentFriendRequest);
@@ -365,7 +373,7 @@ public class LandingActivity extends BaseActivity {
         Gson gson = new Gson();
         temp = new ArrayList<>();
         if (json != null) {
-            if (!json.isEmpty()) {
+            if (json.isEmpty()) {
                 temp = new ArrayList<>();
             } else {
                 Type type = new TypeToken<List<FriendRequestData>>() {

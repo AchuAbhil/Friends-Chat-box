@@ -71,8 +71,6 @@ public class SignInFragment extends BaseFragment {
             );
             if (userDetailsHashMap.containsKey(true)) {
                 getAppPreferences().setUserInfo(userDetailsHashMap.get(true));
-                getAppPreferences().setAllFriendRequest(convertToList(Objects.requireNonNull(userDetailsHashMap.get(true)).getFriendsRequestList()));
-                getAppPreferences().setAllFriends(convertToList(Objects.requireNonNull(userDetailsHashMap.get(true)).getFriendsList()));
                 ((MainActivity) requireActivity()).navigateToLanding();
             } else {
                 Toast.makeText(requireActivity(), "UserName: " + binding.edtUsername.getEditText().getText().toString() + ",Is not registered kindly register.", Toast.LENGTH_LONG).show();
@@ -138,7 +136,7 @@ public class SignInFragment extends BaseFragment {
         Gson gson = new Gson();
         temp = new ArrayList<>();
         if (json != null) {
-            if (!json.isEmpty()) {
+            if (json.isEmpty()) {
                 temp = new ArrayList<>();
             } else {
                 Type type = new TypeToken<List<FriendRequestData>>() {

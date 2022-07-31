@@ -61,65 +61,6 @@ public class AppPreferences {
         editor.apply();
     }
 
-    public List<FriendRequestData> getAllFriends() {
-        List<FriendRequestData> temp;
-        Gson gson = new Gson();
-        String content = mPref.getString("FriendList", "");
-        temp = new ArrayList<>();
-        if (content != null) {
-            if (content.isEmpty()) {
-                temp = new ArrayList<>();
-            } else {
-                Type type = new TypeToken<List<FriendRequestData>>() {
-                }.getType();
-                temp = gson.fromJson(content, type);
-            }
-        }
-        return temp;
-    }
-
-    public void setAllFriends(List<FriendRequestData> list) {
-        SharedPreferences.Editor editor = mPref.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(list);
-        editor.putString("FriendList", json);
-        editor.apply();
-    }
-
-    public void addFriend(FriendRequestData friendRequestData) {
-        List<FriendRequestData> temp = getAllFriends();
-        SharedPreferences.Editor editor = mPref.edit();
-        temp.add(friendRequestData);
-        Gson gson = new Gson();
-        String jsonString = gson.toJson(temp);
-        editor.putString("FriendList", jsonString).apply();
-    }
-
-    public List<FriendRequestData> getAllFriendRequest() {
-        List<FriendRequestData> temp;
-        Gson gson = new Gson();
-        String content = mPref.getString("FriendRequestList", "");
-        temp = new ArrayList<>();
-        if (content != null) {
-            if (content.isEmpty()) {
-                temp = new ArrayList<>();
-            } else {
-                Type type = new TypeToken<List<FriendRequestData>>() {
-                }.getType();
-                temp = gson.fromJson(content, type);
-            }
-        }
-        return temp;
-    }
-
-    public void setAllFriendRequest(List<FriendRequestData> list) {
-        SharedPreferences.Editor editor = mPref.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(list);
-        editor.putString("FriendRequestList", json);
-        editor.apply();
-    }
-
     public List<FriendRequestData> convertToList(String json) {
         List<FriendRequestData> temp;
         Gson gson = new Gson();
@@ -132,23 +73,6 @@ public class AppPreferences {
             temp = gson.fromJson(json, type);
         }
         return temp;
-    }
-
-    public void addFriendRequest(FriendRequestData friendRequestData) {
-        List<FriendRequestData> temp = getAllFriends();
-        SharedPreferences.Editor editor = mPref.edit();
-        temp.add(friendRequestData);
-        Gson gson = new Gson();
-        String jsonString = gson.toJson(temp);
-        editor.putString("FriendRequestList", jsonString).apply();
-    }
-
-    public String getFriendRequestToString() {
-        return mPref.getString("FriendRequestList", "");
-    }
-
-    public String getFriendsToString() {
-        return mPref.getString("FriendList", "");
     }
 
     public void clear() {

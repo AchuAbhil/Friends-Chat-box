@@ -3,6 +3,13 @@ package com.northampton.friendschatbox.data.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserDetails implements Parcelable {
 
     public static final Parcelable.Creator<UserDetails> CREATOR = new Parcelable.Creator<UserDetails>() {
@@ -25,6 +32,8 @@ public class UserDetails implements Parcelable {
     public String hobbies;
     public String friendsRequestList;
     public String friendsList;
+    public List<FriendRequestData> friendsRequest;
+    public List<FriendRequestData> friends;
 
     public UserDetails() {
     }
@@ -49,6 +58,8 @@ public class UserDetails implements Parcelable {
         this.hobbies = hobbies;
         this.friendsList = friendsList;
         this.friendsRequestList = friendRequestDataList;
+        this.friends = getFriends();
+        this.friendsRequest = getFriendsRequest();
     }
 
     protected UserDetails(Parcel in) {
@@ -149,5 +160,39 @@ public class UserDetails implements Parcelable {
         dest.writeString(this.password);
         dest.writeString(this.friendsRequestList);
         dest.writeString(this.friendsList);
+    }
+
+    public List<FriendRequestData> convertToList(String json) {
+        List<FriendRequestData> temp;
+        Gson gson = new Gson();
+        temp = new ArrayList<>();
+        if (json != null) {
+            if (json.isEmpty()) {
+                temp = new ArrayList<>();
+            } else {
+                Type type = new TypeToken<List<FriendRequestData>>() {
+                }.getType();
+                temp = gson.fromJson(json, type);
+            }
+        }
+        return temp;
+    }
+
+    public List<FriendRequestData> getFriendsRequest() {
+        friendsRequest = convertToList(friendsRequestList);
+        return friendsRequest;
+    }
+
+    public void setFriendsRequest(List<FriendRequestData> friendsRequest) {
+        this.friendsRequest = friendsRequest;
+    }
+
+    public List<FriendRequestData> getFriends() {
+        friends = convertToList(friendsList);
+        return friends;
+    }
+
+    public void setFriends(List<FriendRequestData> friends) {
+        this.friends = friends;
     }
 }

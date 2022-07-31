@@ -41,6 +41,7 @@ public class SearchFriendFragment extends BaseFragment implements AdapterInterfa
     FriendRequestData currentFriendRequestData = new FriendRequestData();
     private AdapterInterface adapterInterface;
     private FragmentSearchFriendBinding binding;
+    private LandingActivity activity;
 
     public SearchFriendFragment() {
         // Required empty public constructor
@@ -63,6 +64,7 @@ public class SearchFriendFragment extends BaseFragment implements AdapterInterfa
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         adapterInterface = this;
+        activity = ((LandingActivity) requireActivity());
         userDetails = getAppPreferences().getUserInfo();
         currentFriendRequestData.setRequestedAccepted(false);
         currentFriendRequestData.setEmailAddress(userDetails.getEmailAddress());
@@ -77,7 +79,7 @@ public class SearchFriendFragment extends BaseFragment implements AdapterInterfa
 
     private void findFriend() {
         userList.clear();
-        userList.addAll(((LandingActivity) requireActivity()).getUsersList());
+        userList.addAll(activity.getUsersList());
         if (userList != null && !userList.isEmpty()) {
             binding.rvUser.setVisibility(View.VISIBLE);
             binding.tvNoDBMessage.setVisibility(View.GONE);
@@ -91,10 +93,11 @@ public class SearchFriendFragment extends BaseFragment implements AdapterInterfa
     @Override
     public void onItemClicked(UserDetails clickedUserDetails, String email) {
         friendList.clear();
-        if (getAppPreferences().getAllFriendRequest() != null) {
-            friendList = getAppPreferences().getAllFriends();
-            friendList = ((LandingActivity) requireActivity()).removeNullInList(friendList);
-            friendList = ((LandingActivity) requireActivity()).removeDuplicates(friendList);
+        userDetails = getAppPreferences().getUserInfo();
+        if (userDetails.getFriendsRequest() != null) {
+            friendList = userDetails.getFriendsRequest();
+            friendList = activity.removeNullInList(friendList);
+            friendList = activity.removeDuplicates(friendList);
         }
         Handler handler = new Handler();
         binding.rvUser.setEnabled(false);
@@ -105,7 +108,7 @@ public class SearchFriendFragment extends BaseFragment implements AdapterInterfa
             friendRequest.setFullName(clickedUserDetails.getFullName());
             friendRequest.setEmailAddress(clickedUserDetails.getEmailAddress());
             friendRequest.setRequestedAccepted(false);
-            ((LandingActivity) requireActivity()).friendsRequestDBUpdateCheck(friendRequest, currentFriendRequestData);
+            activity.friendsRequestDBUpdateCheck(friendRequest, currentFriendRequestData);
             showProgressBar(false);
             binding.rvUser.setEnabled(true);
         }, SPLASH_SCREEN_TIME_OUT);

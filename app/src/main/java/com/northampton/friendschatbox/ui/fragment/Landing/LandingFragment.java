@@ -28,6 +28,7 @@ public class LandingFragment extends BaseFragment {
     List<FriendRequestData> friendsList = new ArrayList<>();
     FriendRequestData currentFriendData = new FriendRequestData();
     private FragmentLandingPageBinding binding;
+    private LandingActivity activity;
 
     public LandingFragment() {
         // Required empty public constructor
@@ -54,8 +55,10 @@ public class LandingFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((LandingActivity) requireActivity()).setToolbarTitle("My Friends");
+        activity = (LandingActivity) requireActivity();
+        activity.setToolbarTitle("My Friends");
         userDetails = getAppPreferences().getUserInfo();
+        friendsList = userDetails.getFriends();
         currentFriendData.setRequestedAccepted(false);
         currentFriendData.setEmailAddress(userDetails.getEmailAddress());
         currentFriendData.setFullName(userDetails.getFullName());
@@ -64,8 +67,9 @@ public class LandingFragment extends BaseFragment {
 
     private void findFriendList() {
         friendsList.clear();
-        friendsList.addAll(getAppPreferences().getAllFriends());
-        friendsList = ((LandingActivity) requireActivity()).removeNullInList(friendsList);
+        userDetails = getAppPreferences().getUserInfo();
+        friendsList.addAll(userDetails.getFriends());
+        friendsList = activity.removeNullInList(friendsList);
         if (friendsList != null && !friendsList.isEmpty()) {
             binding.rvUser.setVisibility(View.VISIBLE);
             binding.tvNoDBMessage.setVisibility(View.GONE);

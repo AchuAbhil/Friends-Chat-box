@@ -39,6 +39,7 @@ public class FriendsRequestFragment extends BaseFragment implements FDRequestAda
     FriendRequestData currentFriendRequestData = new FriendRequestData();
     private FragmentFriendsRequestBinding binding;
     private FDRequestAdapterInterface adapterInterface;
+    private LandingActivity activity;
 
     public FriendsRequestFragment() {
         // Required empty public constructor
@@ -62,6 +63,7 @@ public class FriendsRequestFragment extends BaseFragment implements FDRequestAda
         super.onViewCreated(view, savedInstanceState);
         adapterInterface = this;
         userDetails = getAppPreferences().getUserInfo();
+        activity = (LandingActivity) requireActivity();
         currentFriendRequestData.setRequestedAccepted(false);
         currentFriendRequestData.setEmailAddress(userDetails.getEmailAddress());
         currentFriendRequestData.setFullName(userDetails.getFullName());
@@ -75,9 +77,10 @@ public class FriendsRequestFragment extends BaseFragment implements FDRequestAda
 
     private void findFriendRequest() {
         friendRequestList.clear();
-        friendRequestList.addAll(getAppPreferences().getAllFriendRequest());
-        friendRequestList = ((LandingActivity) requireActivity()).removeNullInList(friendRequestList);
-        friendRequestList = ((LandingActivity) requireActivity()).removeDuplicates(friendRequestList);
+        UserDetails userDetails = mAppPreferences.getUserInfo();
+        friendRequestList.addAll(userDetails.getFriendsRequest());
+        friendRequestList = activity.removeNullInList(friendRequestList);
+        friendRequestList = activity.removeDuplicates(friendRequestList);
         if (friendRequestList != null && !friendRequestList.isEmpty()) {
             binding.rvUser.setVisibility(View.VISIBLE);
             binding.tvNoDBMessage.setVisibility(View.GONE);
@@ -91,8 +94,9 @@ public class FriendsRequestFragment extends BaseFragment implements FDRequestAda
     @Override
     public void onAddItemClicked(FriendRequestData clickedUserDetails, String email) {
         friendRequestList.clear();
-        if (getAppPreferences().getAllFriendRequest() != null) {
-            friendRequestList = getAppPreferences().getAllFriendRequest();
+        UserDetails userDetails = mAppPreferences.getUserInfo();
+        if (userDetails.getFriendsRequest() != null) {
+            friendRequestList = userDetails.getFriendsRequest();
         }
         Handler handler = new Handler();
         binding.rvUser.setEnabled(false);
@@ -104,7 +108,7 @@ public class FriendsRequestFragment extends BaseFragment implements FDRequestAda
             friendRequest.setEmailAddress(clickedUserDetails.getEmailAddress());
             friendRequest.setDateBecomeBuddy(getDateTime());
             friendRequest.setRequestedAccepted(false);
-            ((LandingActivity) requireActivity()).friendsListDBUpdateCheck(friendRequest, currentFriendRequestData, false);
+            activity.friendsListDBUpdateCheck(friendRequest, currentFriendRequestData, false);
             showProgressBar(false);
             binding.rvUser.setEnabled(true);
             findFriendRequest();
@@ -114,8 +118,9 @@ public class FriendsRequestFragment extends BaseFragment implements FDRequestAda
     @Override
     public void onDeleteCtaClicked(FriendRequestData clickedUserDetails, String email) {
         friendRequestList.clear();
-        if (getAppPreferences().getAllFriendRequest() != null) {
-            friendRequestList = getAppPreferences().getAllFriendRequest();
+        UserDetails userDetails = mAppPreferences.getUserInfo();
+        if (userDetails.getFriendsRequest() != null) {
+            friendRequestList = userDetails.getFriendsRequest();
         }
         Handler handler = new Handler();
         binding.rvUser.setEnabled(false);
@@ -126,7 +131,7 @@ public class FriendsRequestFragment extends BaseFragment implements FDRequestAda
             friendRequest.setFullName(clickedUserDetails.getFullName());
             friendRequest.setEmailAddress(clickedUserDetails.getEmailAddress());
             friendRequest.setRequestedAccepted(false);
-            ((LandingActivity) requireActivity()).friendsListDBUpdateCheck(friendRequest, currentFriendRequestData, true);
+            activity.friendsListDBUpdateCheck(friendRequest, currentFriendRequestData, true);
             showProgressBar(false);
             binding.rvUser.setEnabled(true);
             findFriendRequest();
