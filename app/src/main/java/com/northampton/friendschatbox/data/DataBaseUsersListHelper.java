@@ -152,6 +152,7 @@ public class DataBaseUsersListHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_FRIENDS_REQUEST_LIST, friendRequestToString);
+        Log.d(TAG, "updateUserFriendRequestList friendRequestToString: "+ friendRequestToString +" originalName: "+originalName);
         // on below line we are calling a update method to update our database and passing our values.
         // and we are comparing it with name of our course which is stored in original name variable.
         long insert = db.update(ALL_USERS_TABLE, contentValues, "COLUMN_EMAIL_ADDRESS=?", new String[]{originalName});
@@ -161,16 +162,17 @@ public class DataBaseUsersListHelper extends SQLiteOpenHelper {
     }
 
     // below is the method for updating our user based on the name
-    public HashMap<Boolean, String> updateUserFriendList(String originalName, String friendRequestToString) {
+    public HashMap<Boolean, String> updateUserFriendList(String originalName, String friendListToString) {
         // calling a method to get writable database.
         HashMap<Boolean, String> stringHashMap = new HashMap<>();
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_FRIENDS_LIST, friendRequestToString);
+        contentValues.put(COLUMN_FRIENDS_LIST, friendListToString);
+        Log.d(TAG, "updateUserFriendList: "+ friendListToString +" originalName: "+originalName);
         // on below line we are calling a update method to update our database and passing our values.
         // and we are comparing it with name of our course which is stored in original name variable.
         long insert = db.update(ALL_USERS_TABLE, contentValues, "COLUMN_EMAIL_ADDRESS=?", new String[]{originalName});
-        stringHashMap.put(insert != -1, friendRequestToString);
+        stringHashMap.put(insert != -1, friendListToString);
         db.close();
         return stringHashMap;
     }

@@ -64,9 +64,10 @@ public class FriendsRequestFragment extends BaseFragment implements FDRequestAda
         adapterInterface = this;
         userDetails = getAppPreferences().getUserInfo();
         activity = (LandingActivity) requireActivity();
-        currentFriendRequestData.setRequestedAccepted(false);
+        currentFriendRequestData.setRequestedAccepted(true);
         currentFriendRequestData.setEmailAddress(userDetails.getEmailAddress());
         currentFriendRequestData.setFullName(userDetails.getFullName());
+        currentFriendRequestData.setDateBecomeBuddy(getDateTime());
         findFriendRequest();
     }
 
@@ -107,7 +108,7 @@ public class FriendsRequestFragment extends BaseFragment implements FDRequestAda
             friendRequest.setFullName(clickedUserDetails.getFullName());
             friendRequest.setEmailAddress(clickedUserDetails.getEmailAddress());
             friendRequest.setDateBecomeBuddy(getDateTime());
-            friendRequest.setRequestedAccepted(false);
+            friendRequest.setRequestedAccepted(true);
             activity.friendsListDBUpdateCheck(friendRequest, currentFriendRequestData, false);
             showProgressBar(false);
             binding.rvUser.setEnabled(true);

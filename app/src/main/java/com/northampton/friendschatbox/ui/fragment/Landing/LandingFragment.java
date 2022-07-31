@@ -26,7 +26,6 @@ public class LandingFragment extends BaseFragment {
     private static final String TAG = LandingFragment.class.getName();
     UserDetails userDetails = new UserDetails();
     List<FriendRequestData> friendsList = new ArrayList<>();
-    FriendRequestData currentFriendData = new FriendRequestData();
     private FragmentLandingPageBinding binding;
     private LandingActivity activity;
 
@@ -59,9 +58,6 @@ public class LandingFragment extends BaseFragment {
         activity.setToolbarTitle("My Friends");
         userDetails = getAppPreferences().getUserInfo();
         friendsList = userDetails.getFriends();
-        currentFriendData.setRequestedAccepted(false);
-        currentFriendData.setEmailAddress(userDetails.getEmailAddress());
-        currentFriendData.setFullName(userDetails.getFullName());
         findFriendList();
     }
 

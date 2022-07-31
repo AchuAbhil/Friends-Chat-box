@@ -102,8 +102,8 @@ public class LandingActivity extends BaseActivity {
         return dataBaseUsersListHelper.updateUserFriendRequestList(emailAddress, friendRequestToString);
     }
 
-    public HashMap<Boolean, String> updateDBFriendList(String emailAddress, String friendRequestToString) {
-        return dataBaseUsersListHelper.updateUserFriendList(emailAddress, friendRequestToString);
+    public HashMap<Boolean, String> updateDBFriendList(String emailAddress, String friendListToString) {
+        return dataBaseUsersListHelper.updateUserFriendList(emailAddress, friendListToString);
     }
 
     public void friendsListDBUpdateCheck(FriendRequestData clickedFriendData, FriendRequestData currentFriendData, Boolean isDeleteFriendsItem) {
@@ -124,7 +124,13 @@ public class LandingActivity extends BaseActivity {
                 //check if current friends list contain clicked email
                 if (!checkIfEmailPreExist(clickedFriendData.getEmailAddress(), currentFriendsList, "friendsList")) {
                     Log.d(TAG, "friendsListDBUpdateCheck CurrentUserEmailAddress: " + currentFriendData.getEmailAddress());
-                    UpdateFDListDB(currentFriendData, clickedFriendData, currentFriendsList, clickedFriendsList, currentFriendRequestList, clickedFriendRequestList);
+                    UpdateFDListDB(
+                            currentFriendData,
+                            clickedFriendData,
+                            currentFriendsList,
+                            clickedFriendsList,
+                            currentFriendRequestList,
+                            clickedFriendRequestList);
                 } else {
                     deleteFDRQListDB(currentFriendData, clickedFriendData, currentFriendRequestList, clickedFriendRequestList);
                 }
@@ -146,15 +152,17 @@ public class LandingActivity extends BaseActivity {
     ) {
         currentFriendsList.add(clickedFriendData);
         List<FriendRequestData> currentFriendLists = removeDuplicates(currentFriendsList);
+        currentFriendLists = removeNullInList(currentFriendLists);
         Log.d(TAG, "UpdateFDListDB currentEmailAddress: " + currentFriendData.getEmailAddress() + " getFriendsListToString: " + getFriendsListToString(currentFriendLists));
         if (updateDBFriendList(currentFriendData.getEmailAddress(), getFriendsListToString(currentFriendLists)).containsKey(true)) {
             UserDetails userDetails = mAppPreferences.getUserInfo();
-            userDetails.setFriendsRequestList(getFriendsListToString(currentFriendRequestList));
+            userDetails.setFriendsList(getFriendsListToString(currentFriendsList));
             mAppPreferences.setUserInfo(userDetails);
             //check if clicked friends list contain current email
             if (!checkIfEmailPreExist(currentFriendData.getEmailAddress(), clickedFriendsList)) {
                 clickedFriendsList.add(currentFriendData);
                 List<FriendRequestData> clickedFriendList = removeDuplicates(clickedFriendsList);
+                clickedFriendList = removeNullInList(clickedFriendList);
                 Log.d(TAG, "UpdateFDListDB ClickedEmailAddress: " + clickedFriendData.getEmailAddress() + " getFriendsListToString: " + getFriendsListToString(clickedFriendList));
                 updateDBFriendList(clickedFriendData.getEmailAddress(), getFriendsListToString(clickedFriendList));
             }
@@ -170,6 +178,7 @@ public class LandingActivity extends BaseActivity {
             currentFriendRequestList = removeItem(currentFriendRequestList, clickedFriendRequest);
         }
         List<FriendRequestData> currentFriendRequestLists = removeDuplicates(currentFriendRequestList);
+        currentFriendRequestLists = removeNullInList(currentFriendRequestLists);
         Log.d(TAG, "deleteFDRQListDB currentEmailAddress: " + currentFriendRequest.getEmailAddress() + " getFriendsListToString: " + getFriendsListToString(currentFriendRequestLists));
         if (updateDBFriendRequestList(currentFriendRequest.getEmailAddress(), getFriendsListToString(currentFriendRequestLists)).containsKey(true)) {
             UserDetails userDetails = mAppPreferences.getUserInfo();
@@ -180,6 +189,7 @@ public class LandingActivity extends BaseActivity {
                 if (clickedFriendRequestList.size() > 0) {
                     clickedFriendRequestList = removeItem(clickedFriendRequestList, currentFriendRequest);
                     List<FriendRequestData> clickedFriendRequestsList = removeDuplicates(clickedFriendRequestList);
+                    clickedFriendRequestsList = removeNullInList(clickedFriendRequestsList);
                     Log.d(TAG, "deleteFDRQListDB ClickedEmailAddress: " + clickedFriendRequest.getEmailAddress() + " getFriendsListToString: " + getFriendsListToString(clickedFriendRequestsList));
                     updateDBFriendRequestList(clickedFriendRequest.getEmailAddress(), getFriendsListToString(clickedFriendRequestsList));
                 }
