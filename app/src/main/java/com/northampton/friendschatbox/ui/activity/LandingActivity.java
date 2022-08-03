@@ -90,12 +90,20 @@ public class LandingActivity extends BaseActivity {
     }
 
     public void updateNavHeader() {
+        userDetails = mAppPreferences.getUserInfo();
         navUsername.setText(userDetails.getFullName());
         navEmail.setText(userDetails.getEmailAddress());
     }
 
-    public Boolean updateProfileDBUserDetails(String originalName, UserDetails userDetails) {
-        return dataBaseUsersListHelper.updateUser(originalName, userDetails);
+    public UserDetails updateProfileDBUserDetails(String originalName, UserDetails newUserDetails, UserDetails oldUserDetails) {
+        updateUserDetailChangeDBInApp(newUserDetails,oldUserDetails);
+        UserDetails userDetails = new UserDetails();
+        if(dataBaseUsersListHelper.updateUser(originalName, userDetails)){
+            userDetails = getUsersInfo(userDetails.getEmailAddress());
+        }else {
+            userDetails = this.userDetails;
+        }
+        return userDetails;
     }
 
     public HashMap<Boolean, String> updateDBFriendRequestList(String emailAddress, String friendRequestToString) {
@@ -104,6 +112,50 @@ public class LandingActivity extends BaseActivity {
 
     public HashMap<Boolean, String> updateDBFriendList(String emailAddress, String friendListToString) {
         return dataBaseUsersListHelper.updateUserFriendList(emailAddress, friendListToString);
+    }
+
+    private void updateUserDetailChangeDBInApp(UserDetails oldUserDetails, UserDetails newUserDetails) {
+        List<UserDetails> userDetailsListMain = dataBaseUsersListHelper.getAllUsers(this);
+        if (userDetailsListMain != null) {
+            if (userDetailsListMain.size() > 0) {
+                for (UserDetails user : userDetailsListMain) {
+                    Boolean friendsList = false;
+                    Boolean friendReqList = false;
+                    if (user.getFriendsRequest() != null) {
+                        for (FriendRequestData friendRequest : user.getFriendsRequest()) {
+                            if (friendRequest != null) {
+                                if (friendRequest.getEmailAddress() != null) {
+                                    if (friendRequest.getFullName().equals(oldUserDetails.getEmailAddress())) {
+                                        friendReqList = true;
+                                        friendRequest.setFullName(newUserDetails.getFullName());
+                                        friendRequest.setEmailAddress(newUserDetails.getEmailAddress());
+                                    }
+                                }
+                            }
+                        }
+                        if(friendReqList){
+                            updateDBFriendRequestList(user.getEmailAddress(), getFriendsListToString(user.getFriendsRequest()));
+                        }
+                    }
+                    if (user.getFriends() != null) {
+                        for (FriendRequestData friendData : user.getFriends()) {
+                            if (friendData != null) {
+                                if (friendData.getEmailAddress() != null) {
+                                    if (friendData.getFullName().equals(oldUserDetails.getEmailAddress())) {
+                                        friendsList = true;
+                                        friendData.setFullName(newUserDetails.getFullName());
+                                        friendData.setEmailAddress(newUserDetails.getFullName());
+                                    }
+                                }
+                            }
+                        }
+                        if(friendsList){
+                            updateDBFriendList(user.getEmailAddress(), getFriendsListToString(user.getFriends()));
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void friendsListDBUpdateCheck(FriendRequestData clickedFriendData, FriendRequestData currentFriendData, Boolean isDeleteFriendsItem) {
@@ -233,6 +285,25 @@ public class LandingActivity extends BaseActivity {
         return userDetailsList;
     }
 
+    public UserDetails getUsersInfo(String userEmail) {
+        List<UserDetails> userDetailsListMain = dataBaseUsersListHelper.getAllUsers(this);
+        UserDetails userDetails = new UserDetails();
+        if (userDetailsListMain != null) {
+            if (userDetailsListMain.size() > 0) {
+                for (UserDetails user : userDetailsListMain) {
+                    if(user!=null){
+                        if(user.getFullName()!=null){
+                            if (user.getFullName().equals(userEmail)) {
+                                userDetails = user;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return userDetails;
+    }
+
     public List<FriendRequestData> removeNullInList(List<FriendRequestData> currentList) {
         List<FriendRequestData> friendRequestListMain = currentList;
         List<FriendRequestData> friendRequestList = new ArrayList<>();
@@ -344,7 +415,7 @@ public class LandingActivity extends BaseActivity {
             toastMsg = " is all ready added to the friend request list.";
         }
         for (FriendRequestData friends : friendsList) {
-            if(friends.getEmailAddress()!=null) {
+            if (friends.getEmailAddress() != null) {
                 if (friends.getEmailAddress().equals(emailAddress)) {
                     Toast.makeText(this, friends.getFullName() + toastMsg, Toast.LENGTH_LONG).show();
                     return true;
@@ -355,7 +426,7 @@ public class LandingActivity extends BaseActivity {
     }
 
     private Boolean checkIfEmailPreExist(String emailAddress, List<FriendRequestData> friendsList) {
-        if(friendsList!=null) {
+        if (friendsList != null) {
             if (friendsList.size() > 0) {
                 for (FriendRequestData friends : friendsList) {
                     if (friends.getEmailAddress().equals(emailAddress)) {

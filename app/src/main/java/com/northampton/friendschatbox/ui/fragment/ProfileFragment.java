@@ -30,6 +30,8 @@ public class ProfileFragment extends BaseFragment {
     private FragmentProfileBinding binding;
     private String currentEmailAddress = "";
     private UserDetails userDetails;
+    private UserDetails oldUserDetails;
+    private LandingActivity activity;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -51,6 +53,7 @@ public class ProfileFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        activity = (LandingActivity) requireActivity();
         init();
         getTextChangeListener();
         registerBtnClick();
@@ -59,6 +62,7 @@ public class ProfileFragment extends BaseFragment {
     private void init() {
         userDetails = new UserDetails();
         userDetails = getUserDetails();
+        oldUserDetails = getUserDetails();
         currentEmailAddress = userDetails.getEmailAddress();
         updateUIDetails(userDetails);
         userDetails.setDateUpdated(getDateTime());
@@ -85,14 +89,12 @@ public class ProfileFragment extends BaseFragment {
                 binding.edtFullName.getEditText() != null &&
                 binding.edtHobbies.getEditText() != null
         ) {
-            if(((LandingActivity) requireActivity()).updateProfileDBUserDetails(currentEmailAddress, userDetails)){
-                Toast.makeText(requireActivity(), "Update Successful.", Toast.LENGTH_LONG).show();
-                Objects.requireNonNull(binding.edtLastUpdated.getEditText()).setText(userDetails.getDateUpdated());
-                getAppPreferences().setUserInfo(userDetails);
-            }else {
-                Toast.makeText(requireActivity(), "Update failed please see the DB values inputted.", Toast.LENGTH_LONG).show();
-            }
-        }else {
+            userDetails = activity.updateProfileDBUserDetails(currentEmailAddress, userDetails, oldUserDetails);
+            Toast.makeText(requireActivity(), "Update Successful.", Toast.LENGTH_LONG).show();
+            Objects.requireNonNull(binding.edtLastUpdated.getEditText()).setText(userDetails.getDateUpdated());
+            getAppPreferences().setUserInfo(userDetails);
+            activity.updateNavHeader();
+        } else {
             Toast.makeText(requireActivity(), "Update failed please see the text values inputted.", Toast.LENGTH_LONG).show();
         }
     }
